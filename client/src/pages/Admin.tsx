@@ -48,10 +48,23 @@ export default function Admin() {
   // Admin auth state for API calls
   const [adminAuth, setAdminAuth] = useState<{ signature: string; timestamp: number; address: string } | null>(null);
 
-  const { data: stats, isLoading: statsLoading, refetch: refetchStats } = trpc.admin.getStats.useQuery(
+  const { data: stats, isLoading: statsLoading, refetch: refetchStats, error: statsError } = trpc.admin.getStats.useQuery(
     adminAuth || { signature: "", timestamp: 0, address: "" },
-    { enabled: isAuthenticated && !!adminAuth }
+    { 
+      enabled: isAuthenticated && !!adminAuth,
+      retry: false,
+    }
   );
+
+  // Handle token expiration - auto re-authenticate
+  useEffect(() => {
+    if (statsError?.message?.includes('expired') || statsError?.message?.includes('Invalid')) {
+      toast.error("Session expired", { description: "Please sign in again" });
+      setIsAuthenticated(false);
+      setAdminAuth(null);
+      setAuthToken(null);
+    }
+  }, [statsError]);
 
   const { data: transactionsData, isLoading: txLoading } = trpc.admin.getTransactions.useQuery(
     adminAuth ? { ...adminAuth, limit: 50 } : { signature: "", timestamp: 0, address: "", limit: 50 },

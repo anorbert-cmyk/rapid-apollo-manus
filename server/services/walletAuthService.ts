@@ -6,7 +6,7 @@
 import { verifyMessage } from "ethers";
 import { isAdminWallet, isSignatureUsed, markSignatureUsed } from "../db";
 
-const SIGNATURE_VALIDITY_MS = 5 * 60 * 1000; // 5 minutes
+const SIGNATURE_VALIDITY_MS = 30 * 60 * 1000; // 30 minutes for better UX
 
 // In-memory challenge store (for production, use Redis)
 const challengeStore = new Map<string, { challenge: string; timestamp: number; expiresAt: number }>();

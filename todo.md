@@ -114,3 +114,6 @@
 
 - [x] Pay with ETH Direct gomb eltávolítása a pricing kártyákról
 - [x] PayPal gomb hozzáadása minden pricing kártyához
+
+- [x] Admin token lejárati idő meghosszabbítása (5 perc -> 30 perc)
+- [x] Frontend automatikus újra-hitelesítés kezelése token lejáratkor
