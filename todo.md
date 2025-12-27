@@ -75,3 +75,12 @@
 - [x] Admin wallet cím beállítása: 0xa14504ffe5E9A245c9d4079547Fa16fA0A823114
 - [x] Coinbase fizetési lehetőség UI (Pay with Any Crypto gomb)
 - [x] Dashboard sidebar menüpontok (Home, My Analyses, Admin)
+
+## API Integráció (GitHub repóból)
+- [x] Perplexity API integráció (Manus LLM helper-en keresztül)
+- [x] Stripe API integráció (Payment Intent + Webhook)
+- [x] Coinbase Commerce integráció (Charge + Webhook)
+- [x] Observer/Insider tier: egyszerű egylépcsős API hívás implementálása
+- [x] Syndicate tier: multiline API hívás lánc implementálása (4 részes)
+- [x] Promptok átvétele a GitHub repóból
+- [x] Prompt injection védelem implementálása
