@@ -124,3 +124,6 @@
 ## Főoldal Kiegészítések
 - [x] Folyamat bemutató szekció (Payment → Analysis → Delivery)
 - [x] "Trusted By" szekció ismert cégek logóival
+
+## Testimonials Szekció
+- [x] Egyedi, nem sablonos Testimonials szekció - kreatív dizájn
