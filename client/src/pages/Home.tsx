@@ -318,10 +318,6 @@ export default function Home() {
                 </Button>
                 <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
                   <Wallet className="w-3.5 h-3.5" />
-                  Pay with PayPal
-                </button>
-                <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
-                  <Wallet className="w-3.5 h-3.5" />
                   Pay with Any Crypto (Coinbase)
                 </button>
               </div>
@@ -334,14 +330,8 @@ export default function Home() {
                   <Users className="w-5 h-5 text-primary" />
                   <h3 className="text-sm font-bold uppercase tracking-[0.1em]">Insider</h3>
                 </div>
-                <span className="urgency-badge">GENESIS MINT</span>
               </div>
 
-              <div className="mb-2">
-                <span className="text-muted-foreground line-through text-lg mr-2">
-                  $149
-                </span>
-              </div>
               <div className="mb-6">
                 <span className="text-6xl font-bold font-playfair">${TIER_CONFIGS.medium.priceUsd}</span>
                 <span className="text-muted-foreground ml-2">USD</span>
@@ -377,17 +367,9 @@ export default function Home() {
                 </Button>
                 <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
                   <Wallet className="w-3.5 h-3.5" />
-                  Pay with PayPal
-                </button>
-                <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
-                  <Wallet className="w-3.5 h-3.5" />
                   Pay with Any Crypto (Coinbase)
                 </button>
               </div>
-
-              <p className="text-xs text-destructive font-mono mt-4 text-center uppercase tracking-wider">
-                ⚠ ONLY 3 SPOTS LEFT AT THIS PRICE
-              </p>
             </div>
 
             {/* Tier 3: Syndicate - APEX */}
@@ -453,10 +435,6 @@ export default function Home() {
                   </Button>
                   <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
                     <Wallet className="w-3.5 h-3.5" />
-                    Pay with PayPal
-                  </button>
-                  <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
-                    <Wallet className="w-3.5 h-3.5" />
                     Pay with Any Crypto (Coinbase)
                   </button>
                 </div>
@@ -492,7 +470,7 @@ export default function Home() {
               <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">Step 1</div>
               <h3 className="text-xl font-bold mb-3">Secure Payment</h3>
               <p className="text-muted-foreground text-sm leading-relaxed">
-                Choose your analysis tier and complete payment via <strong className="text-foreground">Stripe</strong>, <strong className="text-foreground">PayPal</strong>, or <strong className="text-foreground">Crypto</strong>. Your transaction is encrypted and secure.
+                Choose your analysis tier and complete payment via <strong className="text-foreground">Stripe</strong> or <strong className="text-foreground">Crypto</strong>. Your transaction is encrypted and secure.
               </p>
               <div className="mt-4 flex justify-center gap-2">
                 <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">SSL Encrypted</span>

@@ -36,7 +36,7 @@ function PayPalIcon({ className }: { className?: string }) {
 export default function Checkout() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const [, navigate] = useLocation();
-  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "coinbase" | "paypal" | null>(null);
+  const [paymentMethod, setPaymentMethod] = useState<"stripe" | "coinbase" | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
 
   const { data: session, isLoading: sessionLoading } = trpc.session.get.useQuery(
@@ -84,7 +84,7 @@ export default function Checkout() {
     },
   });
 
-  const handlePayment = async (method: "stripe" | "coinbase" | "paypal") => {
+  const handlePayment = async (method: "stripe" | "coinbase") => {
     if (!session) return;
     
     setPaymentMethod(method);
@@ -98,12 +98,6 @@ export default function Checkout() {
       });
     } else if (method === "coinbase") {
       createCoinbaseCharge.mutate({
-        sessionId: session.sessionId,
-        tier: session.tier as "standard" | "medium" | "full",
-        problemStatement: session.problemStatement,
-      });
-    } else if (method === "paypal") {
-      createPayPalOrder.mutate({
         sessionId: session.sessionId,
         tier: session.tier as "standard" | "medium" | "full",
         problemStatement: session.problemStatement,
@@ -156,7 +150,7 @@ export default function Checkout() {
               <div>
                 <h1 className="text-2xl font-bold">Complete Your Purchase</h1>
                 <p className="text-muted-foreground mt-1">
-                  Secure checkout powered by Stripe, PayPal and Coinbase
+                  Secure checkout powered by Stripe and Coinbase
                 </p>
               </div>
 
@@ -239,35 +233,6 @@ export default function Checkout() {
                             </p>
                           </div>
                           {paymentMethod === "stripe" && (
-                            <CheckCircle2 className="h-5 w-5 text-primary" />
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  )}
-
-                  {/* PayPal */}
-                  {paymentConfig?.paypalEnabled && (
-                    <Card 
-                      className={`cursor-pointer transition-all ${
-                        paymentMethod === "paypal" 
-                          ? "border-primary ring-2 ring-primary/20" 
-                          : "hover:border-primary/50"
-                      }`}
-                      onClick={() => !isProcessing && setPaymentMethod("paypal")}
-                    >
-                      <CardContent className="pt-6">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 rounded-lg bg-[#003087]/10 flex items-center justify-center">
-                            <PayPalIcon className="h-6 w-6 text-[#003087]" />
-                          </div>
-                          <div className="flex-1">
-                            <p className="font-medium">PayPal</p>
-                            <p className="text-sm text-muted-foreground">
-                              Pay with your PayPal account or card
-                            </p>
-                          </div>
-                          {paymentMethod === "paypal" && (
                             <CheckCircle2 className="h-5 w-5 text-primary" />
                           )}
                         </div>

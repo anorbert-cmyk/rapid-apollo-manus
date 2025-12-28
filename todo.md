@@ -151,3 +151,11 @@
 - [x] Track wallet addresses for purchases
 - [x] Display purchase history with wallet info
 - [x] Add revenue analytics and charts
+
+## Stripe & Payment Fixes
+- [x] Fix Stripe buttons not clickable (API keys configured)
+- [x] Remove "Only 3 spots left" from Insider tier
+- [x] Remove Insider discount (show regular price)
+- [x] Remove PayPal payment buttons
+- [x] Verify Stripe payment validation (webhook)
+- [x] Verify Coinbase/crypto payment validation (webhook)
