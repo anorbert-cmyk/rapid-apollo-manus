@@ -415,18 +415,7 @@ export default function AnalysisResult() {
     return () => clearInterval(interval);
   }, [session?.status]);
 
-  if (isLoading) {
-    return (
-      <DashboardLayout>
-        <div className="space-y-6">
-          <Skeleton className="h-8 w-64" />
-          <Skeleton className="h-[400px] w-full" />
-        </div>
-      </DashboardLayout>
-    );
-  }
-
-  // Handle PDF export
+  // Handle PDF export - must be before early return to maintain hook order
   const handleExportPDF = useCallback(async () => {
     if (!session || !result) return;
     
@@ -482,6 +471,17 @@ export default function AnalysisResult() {
       setIsExporting(false);
     }
   }, [session, result, tierInfo, isMultiPart, sessionId]);
+
+  if (isLoading) {
+    return (
+      <DashboardLayout>
+        <div className="space-y-6">
+          <Skeleton className="h-8 w-64" />
+          <Skeleton className="h-[400px] w-full" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   // Get status for a specific part
   const getPartStatus = (partNum: number): ProgressStatus => {

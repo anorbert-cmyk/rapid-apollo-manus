@@ -216,3 +216,6 @@
 - [x] Replace OAuth login with MetaMask wallet connection on homepage
 - [x] Admin wallet detection → redirect to /admin
 - [x] User wallet → display shortened address (0x1234...5678) for crypto payments
+
+## Bug Fixes
+- [x] Fix React error #310 on Demo Output page (hooks rendering issue)
