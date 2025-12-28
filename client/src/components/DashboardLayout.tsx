@@ -21,7 +21,7 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, FileText, Home, Shield } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, FileText, Home, Shield, FileOutput, History } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
@@ -29,7 +29,9 @@ import { Button } from "./ui/button";
 
 const menuItems: Array<{ icon: React.ComponentType<{ className?: string }>; label: string; path: string; adminOnly?: boolean }> = [
   { icon: Home, label: "Home", path: "/" },
-  { icon: LayoutDashboard, label: "My Analyses", path: "/dashboard" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: History, label: "History", path: "/history" },
+  { icon: FileOutput, label: "Output", path: "/analysis/test-apex-demo-LAIdJqey" },
   { icon: Shield, label: "Admin Stats", path: "/admin" },
 ];
 

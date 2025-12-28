@@ -9,6 +9,8 @@ import Dashboard from "./pages/Dashboard";
 import Checkout from "./pages/Checkout";
 import AnalysisResult from "./pages/AnalysisResult";
 import Admin from "./pages/Admin";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import History from "./pages/History";
 
 function Router() {
   return (
@@ -18,6 +20,8 @@ function Router() {
       <Route path="/checkout/:sessionId" component={Checkout} />
       <Route path="/analysis/:sessionId" component={AnalysisResult} />
       <Route path="/admin" component={Admin} />
+      <Route path="/payment-success/:sessionId" component={PaymentSuccess} />
+      <Route path="/history" component={History} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

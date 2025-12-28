@@ -38,8 +38,18 @@ import {
   Wrench,
   BarChart3,
   Brain,
-  Rocket
+  Rocket,
+  History,
+  ChevronsUpDown
 } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 const TIER_INFO = {
   standard: { name: "Observer", badge: "tier-badge-standard", isApex: false },
@@ -334,11 +344,20 @@ export default function AnalysisResult() {
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
+  const [isExporting, setIsExporting] = useState(false);
 
   const { data: session } = trpc.session.get.useQuery(
     { sessionId: sessionId || "" },
     { enabled: !!sessionId }
   );
+
+  // Fetch all user analyses for switcher
+  const { data: allAnalyses } = trpc.session.getMyAnalyses.useQuery(undefined, {
+    staleTime: 30000, // Cache for 30 seconds
+  });
+
+  // Filter to only completed analyses for switcher
+  const completedAnalyses = allAnalyses?.filter(a => a.status === "completed") || [];
 
   const { data: result, isLoading } = trpc.analysis.getResult.useQuery(
     { sessionId: sessionId || "" },
@@ -403,6 +422,63 @@ export default function AnalysisResult() {
       </DashboardLayout>
     );
   }
+
+  // Handle PDF export
+  const handleExportPDF = useCallback(async () => {
+    if (!session || !result) return;
+    
+    setIsExporting(true);
+    try {
+      // Collect all content for PDF
+      const content = {
+        title: "APEX Strategic Analysis Report",
+        tier: tierInfo?.name || "Analysis",
+        problemStatement: session.problemStatement,
+        createdAt: new Date().toISOString(),
+        parts: [] as Array<{ title: string; content: string }>
+      };
+      
+      if (isMultiPart) {
+        if (result.part1) content.parts.push({ title: "Part 1: Discovery & Problem Analysis", content: result.part1 });
+        if (result.part2) content.parts.push({ title: "Part 2: Strategic Design & Roadmap", content: result.part2 });
+        if (result.part3) content.parts.push({ title: "Part 3: AI Toolkit & Figma Prompts", content: result.part3 });
+        if (result.part4) content.parts.push({ title: "Part 4: Risk, Metrics & Rationale", content: result.part4 });
+      } else if (result.singleResult) {
+        content.parts.push({ title: "Analysis Result", content: result.singleResult });
+      }
+      
+      // Create markdown content
+      let markdown = `# ${content.title}\n\n`;
+      markdown += `**Tier:** ${content.tier}\n\n`;
+      markdown += `**Problem Statement:**\n${content.problemStatement}\n\n`;
+      markdown += `**Generated:** ${new Date(content.createdAt).toLocaleString()}\n\n`;
+      markdown += `---\n\n`;
+      
+      for (const part of content.parts) {
+        markdown += `## ${part.title}\n\n`;
+        markdown += `${part.content}\n\n`;
+        markdown += `---\n\n`;
+      }
+      
+      // Create blob and download
+      const blob = new Blob([markdown], { type: 'text/markdown' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `apex-analysis-${sessionId}.md`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      
+      toast.success("Analysis exported successfully!");
+    } catch (error) {
+      console.error("Export failed:", error);
+      toast.error("Failed to export analysis");
+    } finally {
+      setIsExporting(false);
+    }
+  }, [session, result, tierInfo, isMultiPart, sessionId]);
 
   // Get status for a specific part
   const getPartStatus = (partNum: number): ProgressStatus => {
@@ -584,13 +660,68 @@ export default function AnalysisResult() {
           </div>
           
           <div className="flex items-center gap-2">
+            {/* Analysis Switcher Dropdown */}
+            {completedAnalyses.length > 1 && (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" size="sm">
+                    <History className="h-4 w-4 mr-2" />
+                    Switch Analysis
+                    <ChevronsUpDown className="h-4 w-4 ml-2" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="w-80">
+                  <DropdownMenuLabel>Your Analyses</DropdownMenuLabel>
+                  <DropdownMenuSeparator />
+                  {completedAnalyses.map((analysis) => {
+                    const isActive = analysis.sessionId === sessionId;
+                    const tierName = TIER_INFO[analysis.tier as keyof typeof TIER_INFO]?.name || analysis.tier;
+                    return (
+                      <DropdownMenuItem
+                        key={analysis.sessionId}
+                        onClick={() => {
+                          if (!isActive) {
+                            localStorage.setItem("activeAnalysisId", analysis.sessionId);
+                            navigate(`/analysis/${analysis.sessionId}`);
+                          }
+                        }}
+                        className={`flex flex-col items-start gap-1 py-2 ${isActive ? "bg-primary/10" : ""}`}
+                      >
+                        <div className="flex items-center gap-2 w-full">
+                          <span className="text-xs px-1.5 py-0.5 rounded bg-muted">{tierName}</span>
+                          {isActive && <CheckCircle2 className="h-3 w-3 text-primary ml-auto" />}
+                        </div>
+                        <span className="text-xs text-muted-foreground line-clamp-1">
+                          {analysis.problemStatement.substring(0, 60)}...
+                        </span>
+                      </DropdownMenuItem>
+                    );
+                  })}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            )}
+            
             <Button variant="outline" size="sm">
               <Share2 className="h-4 w-4 mr-2" />
               Share
             </Button>
-            <Button variant="outline" size="sm">
-              <Download className="h-4 w-4 mr-2" />
-              Export PDF
+            <Button 
+              variant="outline" 
+              size="sm"
+              onClick={handleExportPDF}
+              disabled={isExporting || session?.status === "processing"}
+            >
+              {isExporting ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                <>
+                  <Download className="h-4 w-4 mr-2" />
+                  Export PDF
+                </>
+              )}
             </Button>
           </div>
         </div>

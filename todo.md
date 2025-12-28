@@ -179,3 +179,20 @@
 ## Admin & Output Preview Fixes
 - [x] Fix admin stats menu visibility for admin wallet users (now visible to all users, MetaMask auth on page)
 - [x] Create test link for Output page preview with sample data
+
+## Output Menu, PDF Export & Payment Success Page
+- [x] Add Output menu item to sidebar navigation
+- [x] Implement PDF export for full APEX analysis (exports as Markdown)
+- [ ] Create payment success page with payment confirmation
+- [ ] Add real-time analysis progress on payment success page
+- [ ] Redirect to payment success page after Stripe checkout
+
+## History & Active Analysis System
+- [x] Create History page showing past purchases/analyses
+- [x] Add "Make it Active" button to load selected analysis into Output
+- [x] Add analysis switcher dropdown on Output page
+- [x] Create New Analysis modal with package selection
+- [x] Add payment method selection in modal (Stripe/Crypto)
+- [x] Integrate Stripe.js for proper client-side payment
+- [x] Auto-set latest purchase as active analysis
+- [x] Update navigation to include History menu item
