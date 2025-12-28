@@ -144,3 +144,10 @@
 - [x] Frontend: Create real-time progress UI with part status
 - [x] Frontend: Add polling/refetch for live updates
 - [x] Add estimated time remaining display
+
+## Wallet Login & Admin Dashboard
+- [x] Fix wallet login 404 error (/api/oauth/login route)
+- [x] Create admin dashboard page with analytics
+- [x] Track wallet addresses for purchases
+- [x] Display purchase history with wallet info
+- [x] Add revenue analytics and charts

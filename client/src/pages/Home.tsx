@@ -24,6 +24,7 @@ import {
 import { useState } from "react";
 import { useLocation } from "wouter";
 import { TIER_CONFIGS, type Tier } from "@shared/pricing";
+import { getLoginUrl } from "@/const";
 
 export default function Home() {
   const { user, isAuthenticated } = useAuth();
@@ -156,7 +157,7 @@ export default function Home() {
               <Button
                 variant="default"
                 size="sm"
-                onClick={() => window.location.href = "/api/oauth/login"}
+                onClick={() => window.location.href = getLoginUrl()}
                 className="text-[10px] font-bold py-1.5 px-3 flex items-center gap-2"
               >
                 <Wallet className="w-3.5 h-3.5" />
