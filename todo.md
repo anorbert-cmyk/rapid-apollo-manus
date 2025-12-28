@@ -175,3 +175,7 @@
 - [x] Implement collapsible/expandable sections for long content
 - [x] Add copy-to-clipboard for Figma prompts
 - [x] Create unified Output page with excellent UX/UI
+
+## Admin & Output Preview Fixes
+- [x] Fix admin stats menu visibility for admin wallet users (now visible to all users, MetaMask auth on page)
+- [x] Create test link for Output page preview with sample data

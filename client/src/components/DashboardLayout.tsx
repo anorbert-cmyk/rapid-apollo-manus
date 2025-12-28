@@ -30,7 +30,7 @@ import { Button } from "./ui/button";
 const menuItems: Array<{ icon: React.ComponentType<{ className?: string }>; label: string; path: string; adminOnly?: boolean }> = [
   { icon: Home, label: "Home", path: "/" },
   { icon: LayoutDashboard, label: "My Analyses", path: "/dashboard" },
-  { icon: Shield, label: "Admin", path: "/admin", adminOnly: true },
+  { icon: Shield, label: "Admin Stats", path: "/admin" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -181,9 +181,7 @@ function DashboardLayoutContent({
 
           <SidebarContent className="gap-0">
             <SidebarMenu className="px-2 py-1">
-              {menuItems
-                .filter(item => !item.adminOnly || user?.role === 'admin')
-                .map(item => {
+              {menuItems.map(item => {
                 const isActive = location === item.path;
                 return (
                   <SidebarMenuItem key={item.path}>
