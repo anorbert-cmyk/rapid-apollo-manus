@@ -389,57 +389,76 @@ export default function Home() {
               </p>
             </div>
 
-            {/* Tier 3: Syndicate */}
-            <div className="pricing-card">
-              <div className="flex items-center gap-2 mb-6">
-                <Crown className="w-5 h-5 text-purple-400" />
-                <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-purple-400">
-                  Syndicate
-                </h3>
-              </div>
+            {/* Tier 3: Syndicate - APEX */}
+            <div className="pricing-card relative overflow-hidden">
+              {/* APEX Glow Effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 via-transparent to-purple-500/5 pointer-events-none" />
+              
+              <div className="relative">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="flex items-center gap-2">
+                    <Crown className="w-5 h-5 text-purple-400" />
+                    <h3 className="text-xs font-bold uppercase tracking-[0.2em] text-purple-400">
+                      Syndicate
+                    </h3>
+                  </div>
+                  <span className="px-2 py-1 text-[10px] font-bold bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/40 rounded-full text-cyan-400 tracking-wider">
+                    APEX
+                  </span>
+                </div>
+                
+                {/* Perplexity Powered Badge */}
+                <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-gradient-to-r from-cyan-950/50 to-blue-950/50 rounded-lg border border-cyan-500/20">
+                  <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+                  <span className="text-[10px] font-mono text-cyan-400">Powered by Perplexity sonar-pro</span>
+                </div>
 
-              <div className="mb-6">
-                <span className="text-4xl font-bold font-playfair">${TIER_CONFIGS.full.priceUsd}</span>
-                <span className="text-muted-foreground ml-2">USD</span>
-              </div>
+                <div className="mb-6">
+                  <span className="text-4xl font-bold font-playfair">${TIER_CONFIGS.full.priceUsd}</span>
+                  <span className="text-muted-foreground ml-2">USD</span>
+                </div>
 
-              <ul className="space-y-3 mb-8 text-sm text-muted-foreground">
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-purple-400" />
-                  Everything in Insider
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-purple-400" />
-                  4-part deep analysis
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-purple-400" />
-                  Real-time streaming
-                </li>
-                <li className="flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4 text-purple-400" />
-                  10 Wallet Licenses
-                </li>
-              </ul>
+                <ul className="space-y-3 mb-8 text-sm text-muted-foreground">
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-purple-400" />
+                    Everything in Insider
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-cyan-400" />
+                    <span className="text-cyan-300">4-part APEX deep analysis</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-cyan-400" />
+                    <span className="text-cyan-300">Real-time web research</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-cyan-400" />
+                    <span className="text-cyan-300">10 Figma AI prompts</span>
+                  </li>
+                  <li className="flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-purple-400" />
+                    Verified sources & citations
+                  </li>
+                </ul>
 
-              <div className="space-y-3">
-                <Button
-                  onClick={() => handleStartAnalysis("full")}
-                  disabled={!problemStatement.trim() || createSession.isPending}
-                  className="w-full"
-                  variant="outline"
-                >
-                  <CreditCard className="w-4 h-4 mr-2" />
-                  PAY WITH STRIPE
-                </Button>
-                <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
-                  <Wallet className="w-3.5 h-3.5" />
-                  Pay with PayPal
-                </button>
-                <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
-                  <Wallet className="w-3.5 h-3.5" />
-                  Pay with Any Crypto (Coinbase)
-                </button>
+                <div className="space-y-3">
+                  <Button
+                    onClick={() => handleStartAnalysis("full")}
+                    disabled={!problemStatement.trim() || createSession.isPending}
+                    className="w-full bg-gradient-to-r from-cyan-600 to-purple-600 hover:from-cyan-500 hover:to-purple-500 border-0"
+                  >
+                    <CreditCard className="w-4 h-4 mr-2" />
+                    START APEX ANALYSIS
+                  </Button>
+                  <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
+                    <Wallet className="w-3.5 h-3.5" />
+                    Pay with PayPal
+                  </button>
+                  <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
+                    <Wallet className="w-3.5 h-3.5" />
+                    Pay with Any Crypto (Coinbase)
+                  </button>
+                </div>
               </div>
             </div>
           </div>

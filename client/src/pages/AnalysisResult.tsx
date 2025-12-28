@@ -23,16 +23,16 @@ import {
 } from "lucide-react";
 
 const TIER_INFO = {
-  standard: { name: "Observer", badge: "tier-badge-standard" },
-  medium: { name: "Insider", badge: "tier-badge-medium" },
-  full: { name: "Syndicate", badge: "tier-badge-full" },
+  standard: { name: "Observer", badge: "tier-badge-standard", isApex: false },
+  medium: { name: "Insider", badge: "tier-badge-medium", isApex: false },
+  full: { name: "Syndicate", badge: "tier-badge-full", isApex: true },
 };
 
 const PART_CONFIG = [
-  { number: 1, name: "Discovery & Problem Analysis", icon: Target, color: "text-blue-500" },
-  { number: 2, name: "Strategic Design & Roadmap", icon: Layers, color: "text-purple-500" },
-  { number: 3, name: "AI Toolkit & Figma Prompts", icon: Lightbulb, color: "text-yellow-500" },
-  { number: 4, name: "Risk, Metrics & Rationale", icon: AlertTriangle, color: "text-red-500" },
+  { number: 1, name: "Discovery & Problem Analysis", icon: Target, color: "text-blue-500", description: "Deep dive into the problem space and user needs" },
+  { number: 2, name: "Strategic Design & Roadmap", icon: Layers, color: "text-purple-500", description: "Design strategy and implementation roadmap" },
+  { number: 3, name: "AI Toolkit & Figma Prompts", icon: Lightbulb, color: "text-yellow-500", description: "Practical tools and 10 production-ready prompts" },
+  { number: 4, name: "Risk, Metrics & Rationale", icon: AlertTriangle, color: "text-red-500", description: "Risk assessment and success metrics" },
 ];
 
 export default function AnalysisResult() {
@@ -81,9 +81,16 @@ export default function AnalysisResult() {
               <div className="flex items-center gap-2">
                 <h1 className="text-xl font-bold">Analysis Result</h1>
                 {tierInfo && (
-                  <span className={`tier-badge ${tierInfo.badge}`}>
-                    {tierInfo.name}
-                  </span>
+                  <div className="flex items-center gap-2">
+                    <span className={`tier-badge ${tierInfo.badge}`}>
+                      {tierInfo.name}
+                    </span>
+                    {tierInfo.isApex && (
+                      <span className="px-2 py-0.5 text-xs font-medium bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 rounded-full text-cyan-400">
+                        APEX • Perplexity Powered
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
               <p className="text-sm text-muted-foreground">
@@ -134,30 +141,39 @@ export default function AnalysisResult() {
                 <Progress value={progressPercent} className="h-2" />
                 
                 {isMultiPart && (
-                  <div className="grid grid-cols-4 gap-2 mt-4">
-                    {PART_CONFIG.map((part, i) => {
-                      const partKey = `part${part.number}` as "part1" | "part2" | "part3" | "part4";
-                      const isComplete = result?.[partKey];
-                      const isCurrent = completedParts === i;
-                      
-                      return (
-                        <div 
-                          key={part.number}
-                          className={`p-3 rounded-lg text-center ${
-                            isComplete 
-                              ? "bg-green-500/10 border border-green-500/30" 
-                              : isCurrent
-                                ? "bg-primary/10 border border-primary/30"
-                                : "bg-muted/30 border border-border"
-                          }`}
-                        >
-                          <part.icon className={`h-5 w-5 mx-auto mb-1 ${
-                            isComplete ? "text-green-500" : isCurrent ? "text-primary" : "text-muted-foreground"
-                          }`} />
-                          <p className="text-xs font-medium truncate">{part.name.split(" ")[0]}</p>
-                        </div>
-                      );
-                    })}
+                  <div className="space-y-4 mt-4">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <div className="w-2 h-2 rounded-full bg-cyan-500 animate-pulse" />
+                      <span>Perplexity sonar-pro • Real-time web research enabled</span>
+                    </div>
+                    <div className="grid grid-cols-4 gap-2">
+                      {PART_CONFIG.map((part, i) => {
+                        const partKey = `part${part.number}` as "part1" | "part2" | "part3" | "part4";
+                        const isComplete = result?.[partKey];
+                        const isCurrent = completedParts === i;
+                        
+                        return (
+                          <div 
+                            key={part.number}
+                            className={`p-3 rounded-lg text-center transition-all duration-300 ${
+                              isComplete 
+                                ? "bg-green-500/10 border border-green-500/30" 
+                                : isCurrent
+                                  ? "bg-cyan-500/10 border border-cyan-500/30 animate-pulse"
+                                  : "bg-muted/30 border border-border"
+                            }`}
+                          >
+                            <part.icon className={`h-5 w-5 mx-auto mb-1 ${
+                              isComplete ? "text-green-500" : isCurrent ? "text-cyan-500" : "text-muted-foreground"
+                            }`} />
+                            <p className="text-xs font-medium truncate">{part.name.split(" ")[0]}</p>
+                            {isCurrent && !isComplete && (
+                              <p className="text-[10px] text-cyan-400 mt-1">Researching...</p>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
               </div>

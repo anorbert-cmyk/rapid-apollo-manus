@@ -130,3 +130,10 @@
 
 ## FAQ Szekció Újratervezés
 - [x] FAQ szekció átalakítása - piros helyett esztétikus dizájn
+
+## Perplexity API Integráció (APEX Tier)
+- [x] Perplexity API helper létrehozása (server/_core/perplexity.ts)
+- [x] Masterprompt tárolása és 4-részes elemzés logika
+- [x] Backend router az APEX elemzéshez (4 multi-turn API hívás)
+- [x] Frontend UI az APEX elemzés megjelenítéséhez (4 rész progresszív betöltése)
+- [x] Tesztek írása a Perplexity integrációhoz
