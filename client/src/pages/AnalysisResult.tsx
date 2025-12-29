@@ -301,48 +301,124 @@ const SECTION_ICONS: Record<string, React.ElementType> = {
   "Success Metrics": TrendingUp,
 };
 
-// Parse markdown sections
-function parseMarkdownSections(content: string): Array<{ title: string; content: string; level: number }> {
-  const sections: Array<{ title: string; content: string; level: number }> = [];
+// Parse markdown sections - groups H3 subsections under their parent H2
+function parseMarkdownSections(content: string): Array<{ title: string; content: string; level: number; subsections?: Array<{ title: string; content: string }> }> {
+  const sections: Array<{ title: string; content: string; level: number; subsections?: Array<{ title: string; content: string }> }> = [];
   const lines = content.split('\n');
-  let currentSection: { title: string; content: string[]; level: number } | null = null;
+  let currentH2: { title: string; content: string[]; subsections: Array<{ title: string; content: string[] }> } | null = null;
+  let currentH3: { title: string; content: string[] } | null = null;
   
   for (const line of lines) {
     const h2Match = line.match(/^## (.+)$/);
     const h3Match = line.match(/^### (.+)$/);
     
-    if (h2Match || h3Match) {
-      if (currentSection) {
+    if (h2Match) {
+      // Save previous H3 if exists
+      if (currentH3 && currentH2) {
+        currentH2.subsections.push({
+          title: currentH3.title,
+          content: currentH3.content
+        });
+        currentH3 = null;
+      }
+      // Save previous H2 if exists
+      if (currentH2) {
         sections.push({
-          title: currentSection.title,
-          content: currentSection.content.join('\n').trim(),
-          level: currentSection.level
+          title: currentH2.title,
+          content: currentH2.content.join('\n').trim(),
+          level: 2,
+          subsections: currentH2.subsections.map(s => ({
+            title: s.title,
+            content: s.content.join('\n').trim()
+          }))
         });
       }
-      currentSection = {
-        title: h2Match ? h2Match[1] : h3Match![1],
+      currentH2 = {
+        title: h2Match[1],
         content: [],
-        level: h2Match ? 2 : 3
+        subsections: []
       };
-    } else if (currentSection) {
-      currentSection.content.push(line);
+    } else if (h3Match) {
+      // Save previous H3 if exists
+      if (currentH3 && currentH2) {
+        currentH2.subsections.push({
+          title: currentH3.title,
+          content: currentH3.content
+        });
+      }
+      currentH3 = {
+        title: h3Match[1],
+        content: []
+      };
+    } else if (currentH3) {
+      currentH3.content.push(line);
+    } else if (currentH2) {
+      currentH2.content.push(line);
     }
   }
   
-  if (currentSection) {
+  // Save final H3 and H2
+  if (currentH3 && currentH2) {
+    currentH2.subsections.push({
+      title: currentH3.title,
+      content: currentH3.content
+    });
+  }
+  if (currentH2) {
     sections.push({
-      title: currentSection.title,
-      content: currentSection.content.join('\n').trim(),
-      level: currentSection.level
+      title: currentH2.title,
+      content: currentH2.content.join('\n').trim(),
+      level: 2,
+      subsections: currentH2.subsections.map(s => ({
+        title: s.title,
+        content: s.content.join('\n').trim()
+      }))
     });
   }
   
   return sections;
 }
 
+// Demo session ID constant
+const DEMO_SESSION_ID = "test-apex-demo-LAIdJqey";
+
+// Demo Layout - simplified layout without sidebar for demo page
+function DemoLayout({ children }: { children: React.ReactNode }) {
+  const [, navigate] = useLocation();
+  
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Simple header for demo */}
+      <header className="sticky top-0 z-50 border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container flex h-14 items-center justify-between">
+          <div className="flex items-center gap-4">
+            <a href="/" className="flex items-center gap-2 font-bold text-lg">
+              <Zap className="h-5 w-5 text-primary" />
+              Rapid Apollo
+            </a>
+            <span className="px-2 py-0.5 text-xs font-medium bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 rounded-full text-cyan-400">
+              Demo Analysis
+            </span>
+          </div>
+          <Button onClick={() => navigate("/")} variant="outline" size="sm">
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Back to Home
+          </Button>
+        </div>
+      </header>
+      <main className="container py-6">
+        {children}
+      </main>
+    </div>
+  );
+}
+
 export default function AnalysisResult() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const [, navigate] = useLocation();
+  
+  // Check if this is the demo page
+  const isDemoMode = sessionId === DEMO_SESSION_ID;
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
@@ -612,6 +688,10 @@ export default function AnalysisResult() {
           const Icon = SECTION_ICONS[section.title] || FileText;
           const partConfig = PART_CONFIG[partNum - 1];
           
+          // Combine section content with subsections
+          const hasDirectContent = section.content && section.content.trim().length > 0;
+          const hasSubsections = section.subsections && section.subsections.length > 0;
+          
           return (
             <CollapsibleSection
               key={index}
@@ -619,9 +699,29 @@ export default function AnalysisResult() {
               icon={Icon}
               defaultOpen={index === 0}
               color={partConfig?.color}
+              badge={hasSubsections ? `${section.subsections!.length} sections` : undefined}
             >
-              <div className="prose prose-invert max-w-none prose-sm">
-                <Streamdown>{section.content}</Streamdown>
+              <div className="space-y-4">
+                {/* Direct content under H2 */}
+                {hasDirectContent && (
+                  <div className="prose prose-invert max-w-none prose-sm">
+                    <Streamdown>{section.content}</Streamdown>
+                  </div>
+                )}
+                
+                {/* Subsections (H3) */}
+                {hasSubsections && (
+                  <div className="space-y-3 mt-4">
+                    {section.subsections!.map((sub, subIndex) => (
+                      <div key={subIndex} className="border-l-2 border-primary/30 pl-4">
+                        <h4 className="text-sm font-semibold text-foreground/90 mb-2">{sub.title}</h4>
+                        <div className="prose prose-invert max-w-none prose-sm text-muted-foreground">
+                          <Streamdown>{sub.content}</Streamdown>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             </CollapsibleSection>
           );
@@ -630,10 +730,14 @@ export default function AnalysisResult() {
     );
   };
 
+  // Choose layout based on demo mode
+  const Layout = isDemoMode ? DemoLayout : DashboardLayout;
+  
   return (
-    <DashboardLayout>
+    <Layout>
       <div className="space-y-6">
-        {/* Header */}
+        {/* Header - hidden in demo mode since DemoLayout has its own */}
+        {!isDemoMode && (
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="flex items-center gap-4">
             <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard")}>
@@ -736,6 +840,7 @@ export default function AnalysisResult() {
             </Button>
           </div>
         </div>
+        )}
         
         {/* New Analysis Modal */}
         <NewAnalysisModal 
@@ -1040,6 +1145,6 @@ export default function AnalysisResult() {
           </>
         )}
       </div>
-    </DashboardLayout>
+    </Layout>
   );
 }

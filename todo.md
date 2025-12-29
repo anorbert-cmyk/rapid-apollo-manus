@@ -219,3 +219,30 @@
 
 ## Bug Fixes
 - [x] Fix React error #310 on Demo Output page (hooks rendering issue)
+
+## UI/UX Improvements - December 29
+
+### Homepage Changes
+- [x] Move "How it Works" section higher on the page
+- [x] Update Step 1 text: "Describe your problem in 2-3 sentences"
+
+### Demo Analysis Page
+- [x] Rename "Demo Output" to "Demo Analysis" in navigation
+- [x] Show only demo content (no other menu items visible inside)
+- [x] Fix non-working accordion boxes that don't expand
+
+### Role-Based Navigation
+- [x] Dashboard menu - only visible to admin wallet users
+- [x] Magic link users - only see "My Analyses" (renamed from Output) and "History"
+- [x] Regular users should not see Dashboard menu (admin wallet only)
+
+### New Analysis Modal
+- [x] Add New Analysis button functionality in My Analyses page
+- [x] Modal with problem statement input (same as homepage)
+- [x] Tier/package selector in modal
+- [x] After purchase, redirect to analysis processing page
+- [x] Enable switching between analyses
+
+### Mobile Optimization
+- [x] Fix menubar spreading/breaking on mobile
+- [x] Ensure all pages are mobile responsive

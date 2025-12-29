@@ -218,25 +218,25 @@ export default function Home() {
       </div>
 
       {/* Navigation */}
-      <nav className="sticky top-6 z-40 mx-auto max-w-[95%] px-4">
-        <div className="hud-card rounded-full px-5 py-2.5 flex justify-between items-center">
-          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition">
+      <nav className="sticky top-6 z-40 mx-auto max-w-[95%] px-2 sm:px-4">
+        <div className="hud-card rounded-full px-3 sm:px-5 py-2 sm:py-2.5 flex justify-between items-center">
+          <a href="/" className="flex items-center gap-2 hover:opacity-80 transition flex-shrink-0">
             <div className="w-6 h-6 rounded-lg bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
               <Zap className="w-3.5 h-3.5 text-white" />
             </div>
-            <span className="font-bold text-sm tracking-tight font-mono">AETHER LOGIC</span>
+            <span className="font-bold text-sm tracking-tight font-mono hidden sm:inline">AETHER LOGIC</span>
           </a>
 
-          <div className="flex items-center gap-3">
-            {/* Test Output Link */}
+          <div className="flex items-center gap-1.5 sm:gap-3 flex-wrap justify-end">
+            {/* Demo Analysis Link */}
             <Button
               variant="ghost"
               size="sm"
               onClick={() => navigate("/analysis/test-apex-demo-LAIdJqey")}
-              className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5 text-cyan-400 hover:text-cyan-300"
+              className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 sm:gap-1.5 text-cyan-400 hover:text-cyan-300 px-2 sm:px-3"
             >
-              <Eye className="w-3.5 h-3.5" />
-              Demo Output
+              <Eye className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
+              <span className="hidden xs:inline">Demo</span>
             </Button>
             
             {isAuthenticated && (
@@ -244,15 +244,28 @@ export default function Home() {
                 variant="ghost"
                 size="sm"
                 onClick={() => navigate("/dashboard")}
-                className="text-[10px] font-bold uppercase tracking-widest flex items-center gap-1.5"
+                className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3"
               >
-                <LayoutDashboard className="w-3.5 h-3.5" />
-                Dashboard
+                <LayoutDashboard className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
+                <span className="hidden sm:inline">Dashboard</span>
               </Button>
             )}
 
-            {/* Theme Toggle */}
-            <div className="flex items-center gap-2 bg-muted/50 px-1.5 py-1.5 rounded-full border border-border">
+            {/* Theme Toggle - simplified on mobile */}
+            <button
+              onClick={toggleTheme}
+              className="flex items-center justify-center w-8 h-8 sm:hidden rounded-full bg-muted/50 border border-border"
+              aria-label="Toggle theme"
+            >
+              {theme === "dark" ? (
+                <Sun className="w-3.5 h-3.5 text-yellow-500" />
+              ) : (
+                <Moon className="w-3.5 h-3.5 text-indigo-400" />
+              )}
+            </button>
+            
+            {/* Theme Toggle - full on desktop */}
+            <div className="hidden sm:flex items-center gap-2 bg-muted/50 px-1.5 py-1.5 rounded-full border border-border">
               <Sun className="w-3.5 h-3.5 text-yellow-500" />
               <button
                 onClick={toggleTheme}
@@ -274,10 +287,10 @@ export default function Home() {
                 variant="outline"
                 size="sm"
                 onClick={disconnectWallet}
-                className="text-[10px] font-bold py-1.5 px-3 flex items-center gap-2 font-mono"
+                className="text-[9px] sm:text-[10px] font-bold py-1 sm:py-1.5 px-2 sm:px-3 flex items-center gap-1 sm:gap-2 font-mono"
               >
-                <Wallet className="w-3.5 h-3.5 text-green-500" />
-                {shortenAddress(walletAddress)}
+                <Wallet className="w-3 sm:w-3.5 h-3 sm:h-3.5 text-green-500" />
+                <span className="hidden xs:inline">{shortenAddress(walletAddress)}</span>
               </Button>
             ) : (
               <Button
@@ -285,17 +298,17 @@ export default function Home() {
                 size="sm"
                 onClick={connectWallet}
                 disabled={isConnectingWallet}
-                className="text-[10px] font-bold py-1.5 px-3 flex items-center gap-2"
+                className="text-[9px] sm:text-[10px] font-bold py-1 sm:py-1.5 px-2 sm:px-3 flex items-center gap-1 sm:gap-2"
               >
                 {isConnectingWallet ? (
                   <>
-                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                    CONNECTING...
+                    <Loader2 className="w-3 sm:w-3.5 h-3 sm:h-3.5 animate-spin" />
+                    <span className="hidden sm:inline">CONNECTING...</span>
                   </>
                 ) : (
                   <>
-                    <Wallet className="w-3.5 h-3.5" />
-                    CONNECT
+                    <Wallet className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
+                    <span className="hidden xs:inline">CONNECT</span>
                   </>
                 )}
               </Button>
@@ -354,6 +367,85 @@ export default function Home() {
           </p>
         </div>
       </div>
+
+      {/* How It Works - Process Section */}
+      <section className="py-32 relative z-10">
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="text-center mb-20">
+            <h2 className="text-4xl font-bold mb-4 font-playfair">How It Works</h2>
+            <p className="text-muted-foreground font-mono text-xs uppercase tracking-[0.2em]">
+              From Payment to Strategic Insights in 3 Steps
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-3 gap-8 relative">
+            {/* Connection Lines */}
+            <div className="hidden md:block absolute top-16 left-1/4 right-1/4 h-0.5">
+              <div className="flow-line w-full h-full">
+                <div className="flow-beam" />
+              </div>
+            </div>
+
+            {/* Step 1: Describe Problem */}
+            <div className="glass-panel p-8 text-center relative group hover:border-primary/30 transition-all duration-300">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/10 border border-green-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Mail className="w-8 h-8 text-green-400" />
+              </div>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">Step 1</div>
+              <h3 className="text-xl font-bold mb-3">Describe Your Problem</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Write your <strong className="text-foreground">problem statement in 2-3 sentences</strong>. Be specific about your challenge, target market, or the solution you're exploring.
+              </p>
+              <div className="mt-4 flex justify-center gap-2">
+                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">2-3 Sentences</span>
+                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">Be Specific</span>
+              </div>
+            </div>
+
+            {/* Step 2: Secure Payment */}
+            <div className="glass-panel p-8 text-center relative group hover:border-primary/30 transition-all duration-300">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/10 border border-indigo-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <CreditCard className="w-8 h-8 text-indigo-400" />
+              </div>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">Step 2</div>
+              <h3 className="text-xl font-bold mb-3">Secure Payment</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Choose your analysis tier and complete payment via <strong className="text-foreground">Stripe</strong> or <strong className="text-foreground">Crypto</strong>. Your transaction is encrypted and secure.
+              </p>
+              <div className="mt-4 flex justify-center gap-2">
+                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">SSL Encrypted</span>
+                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">Instant</span>
+              </div>
+            </div>
+
+            {/* Step 3: AI Analysis & Delivery */}
+            <div className="glass-panel p-8 text-center relative group hover:border-primary/30 transition-all duration-300">
+              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/10 border border-purple-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
+                <Zap className="w-8 h-8 text-purple-400" />
+              </div>
+              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full">Step 3</div>
+              <h3 className="text-xl font-bold mb-3">AI Analysis & Delivery</h3>
+              <p className="text-muted-foreground text-sm leading-relaxed">
+                Our multi-agent AI processes your problem through <strong className="text-foreground">4 phases</strong>. Receive your report via <strong className="text-foreground">email</strong> and dashboard.
+              </p>
+              <div className="mt-4 flex justify-center gap-2">
+                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">Real-time</span>
+                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">Multi-Agent</span>
+              </div>
+            </div>
+          </div>
+
+          {/* Timeline indicator */}
+          <div className="mt-16 text-center">
+            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent/50 border border-border">
+              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="text-sm text-muted-foreground font-mono">
+                Average delivery time: <strong className="text-foreground">Under 24 hours</strong>
+              </span>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* The Pipeline / Input Section */}
       <section id="protocol" className="py-32 relative z-10">
@@ -580,84 +672,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* How It Works - Process Section */}
-      <section className="py-32 relative z-10">
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="text-center mb-20">
-            <h2 className="text-4xl font-bold mb-4 font-playfair">How It Works</h2>
-            <p className="text-muted-foreground font-mono text-xs uppercase tracking-[0.2em]">
-              From Payment to Strategic Insights in 3 Steps
-            </p>
-          </div>
-
-          <div className="grid md:grid-cols-3 gap-8 relative">
-            {/* Connection Lines */}
-            <div className="hidden md:block absolute top-16 left-1/4 right-1/4 h-0.5">
-              <div className="flow-line w-full h-full">
-                <div className="flow-beam" />
-              </div>
-            </div>
-
-            {/* Step 1: Payment */}
-            <div className="glass-panel p-8 text-center relative group hover:border-primary/30 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-green-500/20 to-emerald-500/10 border border-green-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <CreditCard className="w-8 h-8 text-green-400" />
-              </div>
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full">Step 1</div>
-              <h3 className="text-xl font-bold mb-3">Secure Payment</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Choose your analysis tier and complete payment via <strong className="text-foreground">Stripe</strong> or <strong className="text-foreground">Crypto</strong>. Your transaction is encrypted and secure.
-              </p>
-              <div className="mt-4 flex justify-center gap-2">
-                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">SSL Encrypted</span>
-                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">Instant</span>
-              </div>
-            </div>
-
-            {/* Step 2: AI Analysis */}
-            <div className="glass-panel p-8 text-center relative group hover:border-primary/30 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-indigo-500/20 to-purple-500/10 border border-indigo-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <Zap className="w-8 h-8 text-indigo-400" />
-              </div>
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-indigo-500 text-white text-xs font-bold px-3 py-1 rounded-full">Step 2</div>
-              <h3 className="text-xl font-bold mb-3">AI Deep Analysis</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Our multi-agent AI system processes your problem through <strong className="text-foreground">4 distinct phases</strong>: Market Analysis, Technical Feasibility, Competitive Landscape, and Strategic Roadmap.
-              </p>
-              <div className="mt-4 flex justify-center gap-2">
-                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">Real-time</span>
-                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">Multi-Agent</span>
-              </div>
-            </div>
-
-            {/* Step 3: Delivery */}
-            <div className="glass-panel p-8 text-center relative group hover:border-primary/30 transition-all duration-300">
-              <div className="w-16 h-16 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-purple-500/20 to-pink-500/10 border border-purple-500/30 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                <CheckCircle className="w-8 h-8 text-purple-400" />
-              </div>
-              <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-purple-500 text-white text-xs font-bold px-3 py-1 rounded-full">Step 3</div>
-              <h3 className="text-xl font-bold mb-3">Strategic Delivery</h3>
-              <p className="text-muted-foreground text-sm leading-relaxed">
-                Receive your comprehensive report via <strong className="text-foreground">email</strong> and access it anytime in your <strong className="text-foreground">dashboard</strong>. Includes actionable insights and next steps.
-              </p>
-              <div className="mt-4 flex justify-center gap-2">
-                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">Email</span>
-                <span className="px-2 py-1 bg-accent rounded text-[10px] text-muted-foreground border border-border">Dashboard</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Timeline indicator */}
-          <div className="mt-16 text-center">
-            <div className="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-accent/50 border border-border">
-              <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
-              <span className="text-sm text-muted-foreground font-mono">
-                Average delivery time: <strong className="text-foreground">Under 24 hours</strong>
-              </span>
-            </div>
-          </div>
-        </div>
-      </section>
 
       {/* Trusted By Section */}
       <section className="py-24 relative z-10 border-y border-border bg-muted/20">

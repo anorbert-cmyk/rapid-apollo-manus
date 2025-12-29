@@ -21,18 +21,22 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, FileText, Home, Shield, FileOutput, History } from "lucide-react";
+import { LayoutDashboard, LogOut, PanelLeft, FileText, Home, Shield, FileOutput, History, Wallet } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
-const menuItems: Array<{ icon: React.ComponentType<{ className?: string }>; label: string; path: string; adminOnly?: boolean }> = [
+// Admin wallet address from environment
+const ADMIN_WALLET = (import.meta.env.VITE_ADMIN_WALLET_ADDRESS || "").toLowerCase();
+
+const menuItems: Array<{ icon: React.ComponentType<{ className?: string }>; label: string; path: string; adminOnly?: boolean; demoOnly?: boolean }> = [
   { icon: Home, label: "Home", path: "/" },
-  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard" },
+  { icon: LayoutDashboard, label: "Dashboard", path: "/dashboard", adminOnly: true },
+  { icon: FileOutput, label: "My Analyses", path: "/my-analyses" },
   { icon: History, label: "History", path: "/history" },
-  { icon: FileOutput, label: "Output", path: "/analysis/test-apex-demo-LAIdJqey" },
-  { icon: Shield, label: "Admin Stats", path: "/admin" },
+  { icon: FileOutput, label: "Demo Analysis", path: "/analysis/test-apex-demo-LAIdJqey", demoOnly: true },
+  { icon: Shield, label: "Admin Stats", path: "/admin", adminOnly: true },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -115,8 +119,58 @@ function DashboardLayoutContent({
   const isCollapsed = state === "collapsed";
   const [isResizing, setIsResizing] = useState(false);
   const sidebarRef = useRef<HTMLDivElement>(null);
-  const activeMenuItem = menuItems.find(item => item.path === location);
   const isMobile = useIsMobile();
+  
+  // Wallet state for admin detection
+  const [walletAddress, setWalletAddress] = useState<string | null>(null);
+  const hasMetaMask = typeof window !== "undefined" && typeof (window as any).ethereum !== "undefined";
+  
+  // Check for existing wallet connection on mount
+  useEffect(() => {
+    const checkWalletConnection = async () => {
+      if (hasMetaMask) {
+        try {
+          const accounts = await (window as any).ethereum.request({ method: "eth_accounts" });
+          if (accounts.length > 0) {
+            setWalletAddress(accounts[0].toLowerCase());
+          }
+        } catch (error) {
+          console.error("Error checking wallet connection:", error);
+        }
+      }
+    };
+    checkWalletConnection();
+  }, [hasMetaMask]);
+  
+  // Listen for account changes
+  useEffect(() => {
+    if (hasMetaMask) {
+      const handleAccountsChanged = (accounts: string[]) => {
+        if (accounts.length === 0) {
+          setWalletAddress(null);
+        } else {
+          setWalletAddress(accounts[0].toLowerCase());
+        }
+      };
+      
+      (window as any).ethereum.on("accountsChanged", handleAccountsChanged);
+      return () => {
+        (window as any).ethereum.removeListener("accountsChanged", handleAccountsChanged);
+      };
+    }
+  }, [hasMetaMask]);
+  
+  const isAdmin = walletAddress === ADMIN_WALLET && ADMIN_WALLET !== "";
+  
+  // Filter menu items based on user role
+  const filteredMenuItems = menuItems.filter(item => {
+    // Admin-only items only visible to admin wallet
+    if (item.adminOnly && !isAdmin) return false;
+    // Demo-only items visible to everyone
+    return true;
+  });
+  
+  const activeMenuItem = filteredMenuItems.find(item => item.path === location);
 
   useEffect(() => {
     if (isCollapsed) {
@@ -183,7 +237,7 @@ function DashboardLayoutContent({
 
           <SidebarContent className="gap-0">
             <SidebarMenu className="px-2 py-1">
-              {menuItems.map(item => {
+              {filteredMenuItems.map(item => {
                 const isActive = location === item.path;
                 return (
                   <SidebarMenuItem key={item.path}>

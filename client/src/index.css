@@ -3,6 +3,12 @@
 
 @custom-variant dark (&:is(.dark *));
 
+/* Custom xs breakpoint for extra small screens */
+@custom-media --xs (min-width: 480px);
+
+/* Custom variant for xs breakpoint */
+@custom-variant xs (@media (--xs));
+
 /* ========================================
    AETHER LOGIC THEME SYSTEM
    CSS Variables for Light/Dark Themes
