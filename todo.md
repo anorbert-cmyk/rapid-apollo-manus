@@ -254,3 +254,14 @@
 - [ ] Show purchase date, tier, status, and problem statement
 - [ ] Allow navigation to completed analyses
 - [ ] Show payment status for each purchase
+
+## Soft Gate Modal - December 29
+
+### Demo Page Soft Gate Implementation
+- [x] Create innovative soft gate modal component matching Aether Logic style
+- [x] Add scroll tracking to detect 50% page scroll
+- [x] Trigger modal at 50% scroll point
+- [x] Implement email capture form in modal
+- [x] Store email submission in localStorage to not show again
+- [x] Add skip option for users who don't want to register
+- [x] Ensure smooth UX and animations

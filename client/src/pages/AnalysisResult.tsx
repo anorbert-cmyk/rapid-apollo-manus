@@ -52,6 +52,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Plus } from "lucide-react";
 import { NewAnalysisModal } from "@/components/NewAnalysisModal";
+import { SoftGateModal } from "@/components/SoftGateModal";
 
 const TIER_INFO = {
   standard: { name: "Observer", badge: "tier-badge-standard", isApex: false },
@@ -419,6 +420,49 @@ export default function AnalysisResult() {
   
   // Check if this is the demo page
   const isDemoMode = sessionId === DEMO_SESSION_ID;
+  
+  // Soft gate state for demo mode
+  const [showSoftGate, setShowSoftGate] = useState(false);
+  const [hasUnlockedDemo, setHasUnlockedDemo] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('demoUnlocked') === 'true';
+    }
+    return false;
+  });
+  const [hasTriggeredGate, setHasTriggeredGate] = useState(false);
+  
+  // Scroll tracking for soft gate trigger at 50%
+  useEffect(() => {
+    if (!isDemoMode || hasUnlockedDemo || hasTriggeredGate) return;
+    
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight - window.innerHeight;
+      const scrollPercent = (window.scrollY / scrollHeight) * 100;
+      
+      if (scrollPercent >= 50 && !hasTriggeredGate) {
+        setHasTriggeredGate(true);
+        setShowSoftGate(true);
+      }
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, [isDemoMode, hasUnlockedDemo, hasTriggeredGate]);
+  
+  const handleSoftGateSubmit = (email: string) => {
+    // Store email (could be sent to backend later)
+    localStorage.setItem('demoEmail', email);
+    localStorage.setItem('demoUnlocked', 'true');
+    setHasUnlockedDemo(true);
+    setShowSoftGate(false);
+  };
+  
+  const handleSoftGateSkip = () => {
+    // Allow skip but remember they skipped
+    localStorage.setItem('demoSkipped', 'true');
+    setShowSoftGate(false);
+  };
+  
   const [timeRemaining, setTimeRemaining] = useState<number | null>(null);
   const [elapsedTime, setElapsedTime] = useState(0);
   const [activeTab, setActiveTab] = useState("overview");
@@ -1145,6 +1189,16 @@ export default function AnalysisResult() {
           </>
         )}
       </div>
+      
+      {/* Soft Gate Modal for Demo Mode */}
+      {isDemoMode && (
+        <SoftGateModal
+          isOpen={showSoftGate}
+          onClose={() => setShowSoftGate(false)}
+          onSubmit={handleSoftGateSubmit}
+          onSkip={handleSoftGateSkip}
+        />
+      )}
     </Layout>
   );
 }
