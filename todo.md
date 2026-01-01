@@ -324,3 +324,16 @@
 - [x] Add email input field to checkout page (required for magic link)
 - [x] Fix Coinbase "Coming Soon" to show "Available" when configured (already correct - shows based on coinbaseEnabled config)
 - [x] Test complete payment flow end-to-end - LemonSqueezy checkout working!
+
+## NOWPayments Crypto Integration - December 31, 2024
+### Replace Coinbase Commerce with NOWPayments
+- [x] Research NOWPayments API documentation
+- [x] Login to NOWPayments and get API key + IPN Secret
+- [x] Create NOWPayments backend service (payment creation, status check)
+- [x] Implement IPN webhook handler with signature verification
+- [x] Update payment router for NOWPayments
+- [x] Update frontend checkout - connect existing buttons to NOWPayments
+- [x] Comment out LemonSqueezy integration (until company established)
+- [x] Configure environment variables
+- [x] Test complete crypto payment flow - SUCCESS!
+- [x] Remove old Coinbase Commerce integration

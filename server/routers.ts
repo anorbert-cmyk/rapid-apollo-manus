@@ -33,8 +33,11 @@ import {
 
 import { Tier, getTierPrice, getTierConfig, TIER_CONFIGS, isMultiPartTier } from "../shared/pricing";
 import { generateAnalysis, generateSingleAnalysis, generateMultiPartAnalysis } from "./services/perplexityService";
-import { createCheckout, isLemonSqueezyConfigured } from "./services/lemonSqueezyService";
-import { createCharge, isCoinbaseConfigured } from "./services/coinbaseService";
+// LemonSqueezy - commented out until company is established
+// import { createCheckout, isLemonSqueezyConfigured } from "./services/lemonSqueezyService";
+// Coinbase - replaced with NOWPayments
+// import { createCharge, isCoinbaseConfigured } from "./services/coinbaseService";
+import { createInvoice, isNowPaymentsConfigured, getPaymentStatus } from "./services/nowPaymentsService";
 import { createOrder as createPayPalOrder, captureOrder as capturePayPalOrder, isPayPalConfigured } from "./services/paypalService";
 import { verifyAdminSignature, verifyAdminSignatureWithChallenge, checkAdminStatus, generateChallenge } from "./services/walletAuthService";
 import { sendRapidApolloEmail, isEmailConfigured } from "./services/emailService";
@@ -119,6 +122,57 @@ export const appRouter = router({
 
   // ============ PAYMENT ============
   payment: router({
+    // NOWPayments - Primary crypto payment method
+    createNowPaymentsInvoice: publicProcedure
+      .input(z.object({
+        sessionId: z.string(),
+        tier: tierSchema,
+        problemStatement: z.string(),
+        email: z.string().email().optional(),
+      }))
+      .mutation(async ({ input, ctx }) => {
+        if (!isNowPaymentsConfigured()) {
+          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "NOWPayments is not configured" });
+        }
+
+        const appUrl = process.env.VITE_APP_URL || 'https://rapid-apollo-manus.manus.space';
+        const tierConfig = getTierConfig(input.tier);
+        
+        const invoice = await createInvoice({
+          priceAmount: getTierPrice(input.tier),
+          priceCurrency: 'usd',
+          orderId: input.sessionId,
+          orderDescription: `APEX Analysis - ${tierConfig?.displayName || input.tier} Tier`,
+          ipnCallbackUrl: `${appUrl}/api/webhooks/nowpayments`,
+          successUrl: `${appUrl}/payment-success/${input.sessionId}`,
+          cancelUrl: `${appUrl}/checkout/${input.sessionId}`,
+        });
+
+        // Create purchase record
+        await createPurchase({
+          sessionId: input.sessionId,
+          userId: ctx.user?.id,
+          tier: input.tier,
+          amountUsd: getTierPrice(input.tier).toString(),
+          paymentMethod: "nowpayments",
+          paymentStatus: "pending",
+        });
+
+        return {
+          invoiceId: invoice.id,
+          invoiceUrl: invoice.invoice_url,
+        };
+      }),
+
+    // Get NOWPayments payment status
+    getNowPaymentsStatus: publicProcedure
+      .input(z.object({ paymentId: z.string() }))
+      .query(async ({ input }) => {
+        const status = await getPaymentStatus(input.paymentId);
+        return status;
+      }),
+
+    /* LemonSqueezy - COMMENTED OUT until company is established
     createLemonSqueezyCheckout: publicProcedure
       .input(z.object({
         sessionId: z.string(),
@@ -129,38 +183,16 @@ export const appRouter = router({
         prioritySource: z.string().optional(),
       }))
       .mutation(async ({ input, ctx }) => {
-        if (!isLemonSqueezyConfigured()) {
-          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "LemonSqueezy is not configured" });
-        }
-
-        const result = await createCheckout(
-          input.tier,
-          input.sessionId,
-          input.problemStatement,
-          input.email || ctx.user?.email || undefined,
-          input.isPriority,
-          input.prioritySource
-        );
-        
-        if (!result.success) {
-          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: result.error });
-        }
-
-        // Create purchase record
-        await createPurchase({
-          sessionId: input.sessionId,
-          userId: ctx.user?.id,
-          tier: input.tier,
-          amountUsd: getTierPrice(input.tier).toString(),
-          paymentMethod: "lemonsqueezy",
-          paymentStatus: "pending",
-        });
-
-        return {
-          checkoutUrl: result.checkoutUrl,
-        };
+        // Uncomment and import when enabling:
+        // if (!isLemonSqueezyConfigured()) {
+        //   throw new TRPCError({ code: "PRECONDITION_FAILED", message: "LemonSqueezy is not configured" });
+        // }
+        // const result = await createCheckout(...);
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "LemonSqueezy is not available yet" });
       }),
+    */
 
+    /* Coinbase Commerce - REPLACED with NOWPayments
     createCoinbaseCharge: publicProcedure
       .input(z.object({
         sessionId: z.string(),
@@ -169,40 +201,9 @@ export const appRouter = router({
         walletAddress: z.string().optional(),
       }))
       .mutation(async ({ input, ctx }) => {
-        if (!isCoinbaseConfigured()) {
-          throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Coinbase Commerce is not configured" });
-        }
-
-        const result = await createCharge(
-          input.tier,
-          input.sessionId,
-          input.problemStatement,
-          input.walletAddress
-        );
-
-        if (!result.success) {
-          throw new TRPCError({ code: "INTERNAL_SERVER_ERROR", message: result.error });
-        }
-
-        // Create purchase record
-        await createPurchase({
-          sessionId: input.sessionId,
-          userId: ctx.user?.id,
-          tier: input.tier,
-          amountUsd: getTierPrice(input.tier).toString(),
-          paymentMethod: "coinbase",
-          paymentStatus: "pending",
-          coinbaseChargeId: result.chargeId,
-          coinbaseChargeCode: result.code,
-          walletAddress: input.walletAddress,
-        });
-
-        return {
-          chargeId: result.chargeId,
-          code: result.code,
-          hostedUrl: result.hostedUrl,
-        };
+        throw new TRPCError({ code: "PRECONDITION_FAILED", message: "Coinbase is replaced with NOWPayments" });
       }),
+    */
 
     // PayPal order creation
     createPayPalOrder: publicProcedure
@@ -536,8 +537,12 @@ export const appRouter = router({
   config: router({
     getPaymentConfig: publicProcedure.query(() => {
       return {
-        lemonSqueezyEnabled: isLemonSqueezyConfigured(),
-        coinbaseEnabled: isCoinbaseConfigured(),
+        // NOWPayments is the primary crypto payment method
+        nowPaymentsEnabled: isNowPaymentsConfigured(),
+        // LemonSqueezy disabled until company is established
+        lemonSqueezyEnabled: false, // isLemonSqueezyConfigured(),
+        // Coinbase replaced with NOWPayments
+        coinbaseEnabled: false, // isCoinbaseConfigured(),
         paypalEnabled: isPayPalConfigured(),
         perplexityEnabled: isPerplexityConfigured(),
       };

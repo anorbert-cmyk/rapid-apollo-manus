@@ -64,6 +64,13 @@
       "when": 1767118990799,
       "tag": "0008_optimal_iron_patriot",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "5",
+      "when": 1767230509720,
+      "tag": "0009_bouncy_ikaris",
+      "breakpoints": true
     }
   ]
 }

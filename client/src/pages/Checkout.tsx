@@ -1,26 +1,23 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useParams, useLocation } from "wouter";
 import { trpc } from "@/lib/trpc";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
-import { Skeleton } from "@/components/ui/skeleton";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-// LemonSqueezy uses hosted checkout - no SDK needed
 import { 
-  CreditCard, 
   Wallet, 
   ArrowLeft, 
   Shield, 
   Lock,
   Loader2,
   CheckCircle2,
-  ExternalLink,
   Zap,
-  Mail
+  Mail,
+  Bitcoin
 } from "lucide-react";
 
 const TIER_INFO = {
@@ -29,13 +26,9 @@ const TIER_INFO = {
   full: { name: "Syndicate", price: 199, badge: "tier-badge-full", icon: "⚡" },
 };
 
-// LemonSqueezy uses hosted checkout page - no client-side initialization needed
-
-
 export default function Checkout() {
   const { sessionId } = useParams<{ sessionId: string }>();
   const [, navigate] = useLocation();
-  const [paymentMethod, setPaymentMethod] = useState<"lemonsqueezy" | "coinbase" | null>(null);
   const [isProcessing, setIsProcessing] = useState(false);
   const [email, setEmail] = useState("");
   const [emailError, setEmailError] = useState<string | null>(null);
@@ -47,27 +40,16 @@ export default function Checkout() {
 
   const { data: paymentConfig } = trpc.config.getPaymentConfig.useQuery();
 
-  const createLemonSqueezyCheckout = trpc.payment.createLemonSqueezyCheckout.useMutation({
-    onSuccess: (data: { checkoutUrl?: string }) => {
-      if (data.checkoutUrl) {
-        window.location.href = data.checkoutUrl;
-      }
-    },
-    onError: (error: { message: string }) => {
-      toast.error("Payment setup failed", { description: error.message });
-      setIsProcessing(false);
-      setPaymentMethod(null);
-    },
-  });
-
-  const createCoinbaseCharge = trpc.payment.createCoinbaseCharge.useMutation({
+  // NOWPayments - Primary crypto payment method
+  const createNowPaymentsInvoice = trpc.payment.createNowPaymentsInvoice.useMutation({
     onSuccess: (data) => {
-      if (data.hostedUrl) {
-        window.location.href = data.hostedUrl;
+      if (data.invoiceUrl) {
+        // Redirect to NOWPayments hosted checkout
+        window.location.href = data.invoiceUrl;
       }
     },
     onError: (error) => {
-      toast.error("Payment failed", { description: error.message });
+      toast.error("Payment setup failed", { description: error.message });
       setIsProcessing(false);
     },
   });
@@ -86,7 +68,7 @@ export default function Checkout() {
     return true;
   };
 
-  const handleSelectPaymentMethod = (method: "lemonsqueezy" | "coinbase") => {
+  const handlePayWithCrypto = () => {
     if (!session) return;
     
     // Validate email before proceeding
@@ -95,35 +77,14 @@ export default function Checkout() {
       return;
     }
     
-    setPaymentMethod(method);
     setIsProcessing(true);
 
-    if (method === "lemonsqueezy") {
-      createLemonSqueezyCheckout.mutate({
-        sessionId: session.sessionId,
-        tier: session.tier as "standard" | "medium" | "full",
-        problemStatement: session.problemStatement,
-        email: email,
-        isPriority: session.isPriority,
-        prioritySource: session.prioritySource ? String(session.prioritySource) : undefined,
-      });
-    } else if (method === "coinbase") {
-      createCoinbaseCharge.mutate({
-        sessionId: session.sessionId,
-        tier: session.tier as "standard" | "medium" | "full",
-        problemStatement: session.problemStatement,
-      });
-    }
-  };
-
-  const handlePaymentSuccess = () => {
-    toast.success("Payment successful!");
-    navigate(`/payment-success/${sessionId}`);
-  };
-
-  const handlePaymentError = (error: string) => {
-    toast.error("Payment failed", { description: error });
-    setIsProcessing(false);
+    createNowPaymentsInvoice.mutate({
+      sessionId: session.sessionId,
+      tier: session.tier as "standard" | "medium" | "full",
+      problemStatement: session.problemStatement,
+      email: email,
+    });
   };
 
   if (sessionLoading) {
@@ -171,7 +132,7 @@ export default function Checkout() {
               <div>
                 <h1 className="text-2xl font-bold mb-2">Complete Your Order</h1>
                 <p className="text-muted-foreground">
-                  Secure checkout powered by Stripe
+                  Secure cryptocurrency payment via NOWPayments
                 </p>
               </div>
 
@@ -221,22 +182,19 @@ export default function Checkout() {
                 {/* Trust badges */}
                 <div className="flex items-center justify-center gap-4 p-3 bg-muted/30 rounded-lg border border-border/50">
                   <div className="flex items-center gap-2">
-                    <svg className="h-6 w-6" viewBox="0 0 24 24" fill="none">
-                      <rect width="24" height="24" rx="4" fill="#635BFF"/>
-                      <path d="M12 6.5c-2.5 0-4.5 1.5-4.5 3.5 0 2.5 3 3 4.5 3.5 1 .3 1.5.6 1.5 1 0 .5-.5 1-1.5 1s-2-.5-2.5-1l-1 2c1 .7 2 1 3.5 1 2.5 0 4.5-1.5 4.5-3.5 0-2.5-3-3-4.5-3.5-1-.3-1.5-.6-1.5-1 0-.5.5-1 1.5-1s2 .5 2.5 1l1-2c-1-.7-2-1-3.5-1z" fill="white"/>
-                    </svg>
-                    <span className="text-xs text-muted-foreground">Powered by Stripe</span>
+                    <Bitcoin className="h-6 w-6 text-amber-500" />
+                    <span className="text-xs text-muted-foreground">Powered by NOWPayments</span>
                   </div>
                   <div className="h-4 w-px bg-border"></div>
                   <div className="flex items-center gap-1.5">
                     <CheckCircle2 className="h-4 w-4 text-emerald-500" />
-                    <span className="text-xs text-muted-foreground">PCI Compliant</span>
+                    <span className="text-xs text-muted-foreground">200+ Cryptocurrencies</span>
                   </div>
                 </div>
                 
                 {/* Guarantee text */}
                 <p className="text-center text-xs text-muted-foreground">
-                  Your payment information is encrypted and secure. We never store your card details.
+                  Your payment is processed securely. Analysis begins only after payment confirmation.
                 </p>
               </div>
             </div>
@@ -273,76 +231,65 @@ export default function Checkout() {
 
               <Separator />
 
-              <h2 className="text-lg font-semibold">Select Payment Method</h2>
+              <h2 className="text-lg font-semibold">Payment Method</h2>
 
               <div className="space-y-4">
-                {/* LemonSqueezy Card Payment */}
-                  <Card 
-                    className={`glass-panel cursor-pointer transition-all hover:border-primary/50 ${
-                      paymentMethod === "lemonsqueezy" ? "border-primary/50 bg-primary/5" : ""
-                    }`}
-                    onClick={() => !isProcessing && paymentConfig?.lemonSqueezyEnabled && handleSelectPaymentMethod("lemonsqueezy")}
-                  >
-                    <CardContent className="pt-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center">
-                            <CreditCard className="h-5 w-5 text-indigo-400" />
-                          </div>
-                          <div>
-                            <p className="font-medium">Credit / Debit Card</p>
-                            <p className="text-xs text-muted-foreground">Visa, Mastercard, Amex, Apple Pay, Google Pay</p>
-                          </div>
+                {/* NOWPayments Crypto Payment */}
+                <Card 
+                  className={`glass-panel cursor-pointer transition-all hover:border-primary/50 ${
+                    isProcessing ? "border-primary/50 bg-primary/5" : ""
+                  }`}
+                  onClick={() => !isProcessing && paymentConfig?.nowPaymentsEnabled && handlePayWithCrypto()}
+                >
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center">
+                          <Wallet className="h-5 w-5 text-amber-400" />
                         </div>
-                        {paymentMethod === "lemonsqueezy" ? (
-                          <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                        ) : paymentConfig?.lemonSqueezyEnabled ? (
-                          <Badge variant="outline" className="text-emerald-400 border-emerald-400/30">
-                            <CheckCircle2 className="h-3 w-3 mr-1" />
-                            Available
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-muted-foreground">
-                            Unavailable
-                          </Badge>
-                        )}
+                        <div>
+                          <p className="font-medium">Pay with Cryptocurrency</p>
+                          <p className="text-xs text-muted-foreground">BTC, ETH, USDT, USDC, LTC, DOGE & 200+ more</p>
+                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                      {isProcessing ? (
+                        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                      ) : paymentConfig?.nowPaymentsEnabled ? (
+                        <Badge variant="outline" className="text-emerald-400 border-emerald-400/30">
+                          <CheckCircle2 className="h-3 w-3 mr-1" />
+                          Available
+                        </Badge>
+                      ) : (
+                        <Badge variant="outline" className="text-muted-foreground">
+                          Unavailable
+                        </Badge>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
 
-                  {/* Crypto Payment */}
-                  <Card 
-                    className={`glass-panel cursor-pointer transition-all hover:border-primary/50 ${
-                      paymentMethod === "coinbase" ? "border-primary/50 bg-primary/5" : ""
-                    }`}
-                    onClick={() => !isProcessing && paymentConfig?.coinbaseEnabled && handleSelectPaymentMethod("coinbase")}
-                  >
-                    <CardContent className="pt-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center">
-                            <Wallet className="h-5 w-5 text-amber-400" />
-                          </div>
-                          <div>
-                            <p className="font-medium">Cryptocurrency</p>
-                            <p className="text-xs text-muted-foreground">BTC, ETH, USDC via Coinbase</p>
-                          </div>
+                {/* Credit Card - Coming Soon */}
+                <Card className="glass-panel opacity-60">
+                  <CardContent className="pt-6">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-indigo-500/20 to-purple-500/20 border border-indigo-500/30 flex items-center justify-center">
+                          <svg className="h-5 w-5 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                            <rect x="1" y="4" width="22" height="16" rx="2" ry="2"/>
+                            <line x1="1" y1="10" x2="23" y2="10"/>
+                          </svg>
                         </div>
-                        {paymentMethod === "coinbase" ? (
-                          <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                        ) : paymentConfig?.coinbaseEnabled ? (
-                          <Badge variant="outline" className="text-emerald-400 border-emerald-400/30">
-                            <CheckCircle2 className="h-3 w-3 mr-1" />
-                            Available
-                          </Badge>
-                        ) : (
-                          <Badge variant="outline" className="text-muted-foreground">
-                            Coming Soon
-                          </Badge>
-                        )}
+                        <div>
+                          <p className="font-medium">Credit / Debit Card</p>
+                          <p className="text-xs text-muted-foreground">Visa, Mastercard, Amex</p>
+                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                      <Badge variant="outline" className="text-muted-foreground">
+                        Coming Soon
+                      </Badge>
+                    </div>
+                  </CardContent>
+                </Card>
               </div>
 
               {/* What happens next */}
@@ -355,11 +302,11 @@ export default function Checkout() {
                   <ol className="text-sm text-muted-foreground space-y-2">
                     <li className="flex items-start gap-2">
                       <span className="w-5 h-5 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center flex-shrink-0 mt-0.5">1</span>
-                      <span>Complete your secure payment</span>
+                      <span>Select your cryptocurrency and complete payment</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="w-5 h-5 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center flex-shrink-0 mt-0.5">2</span>
-                      <span>Our AI begins analyzing your problem</span>
+                      <span>Once confirmed, our AI begins analyzing your problem</span>
                     </li>
                     <li className="flex items-start gap-2">
                       <span className="w-5 h-5 rounded-full bg-primary/20 text-primary text-xs flex items-center justify-center flex-shrink-0 mt-0.5">3</span>

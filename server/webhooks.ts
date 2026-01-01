@@ -1,16 +1,22 @@
 /**
- * Webhook handlers for LemonSqueezy and Coinbase Commerce
+ * Webhook handlers for NOWPayments (primary crypto payment)
+ * LemonSqueezy is commented out until company is established
  */
 
 import { Router, Request, Response } from "express";
-import { verifyWebhookSignature as verifyLemonSqueezySignature, parseWebhookEvent as parseLemonSqueezyEvent } from "./services/lemonSqueezyService";
-import { verifyWebhookSignature as verifyCoinbaseSignature } from "./services/coinbaseService";
 import { 
-  getPurchaseByCoinbaseChargeId,
+  verifyIPNSignature, 
+  parseIPNPayload, 
+  isPaymentConfirmed,
+  isPaymentFailed,
+  PAYMENT_STATUS_DESCRIPTIONS 
+} from "./services/nowPaymentsService";
+import { 
   updatePurchaseStatus,
   updateAnalysisSessionStatus,
   getAnalysisSessionById,
   createAnalysisResult,
+  getPurchaseBySessionId,
 } from "./db";
 import { notifyOwner } from "./_core/notification";
 import { getTierConfig, getTierPrice, isMultiPartTier } from "../shared/pricing";
@@ -21,9 +27,72 @@ import { sendRapidApolloEmail, isEmailConfigured } from "./services/emailService
 const webhookRouter = Router();
 
 /**
- * LemonSqueezy Webhook Handler
+ * NOWPayments IPN (Instant Payment Notification) Webhook Handler
+ * This is the PRIMARY payment method for crypto payments
  */
+webhookRouter.post("/nowpayments", async (req: Request, res: Response) => {
+  console.log("[NOWPayments Webhook] Received IPN callback");
+  
+  const signature = req.headers["x-nowpayments-sig"] as string;
+  
+  if (!signature) {
+    console.error("[NOWPayments Webhook] Missing signature header");
+    return res.status(400).json({ error: "Missing signature" });
+  }
+
+  // Verify signature
+  const payload = req.body;
+  if (!verifyIPNSignature(payload, signature)) {
+    console.error("[NOWPayments Webhook] Invalid signature");
+    return res.status(400).json({ error: "Invalid signature" });
+  }
+
+  try {
+    const ipnData = parseIPNPayload(payload);
+    const sessionId = ipnData.order_id;
+    const paymentStatus = ipnData.payment_status;
+
+    console.log(`[NOWPayments Webhook] Payment ${ipnData.payment_id} status: ${paymentStatus} (${PAYMENT_STATUS_DESCRIPTIONS[paymentStatus] || 'Unknown'})`);
+    console.log(`[NOWPayments Webhook] Order ID (Session): ${sessionId}`);
+
+    // Only process finished payments - this ensures payment is fully confirmed
+    if (isPaymentConfirmed(paymentStatus)) {
+      console.log(`[NOWPayments Webhook] Payment CONFIRMED for session: ${sessionId}`);
+      
+      // Update purchase status
+      await updatePurchaseStatus(sessionId, "completed", new Date());
+      
+      // Start the analysis - this is the critical step
+      await startAnalysisAfterPayment(sessionId);
+      
+      console.log(`[NOWPayments Webhook] Analysis started for session: ${sessionId}`);
+    } else if (isPaymentFailed(paymentStatus)) {
+      console.log(`[NOWPayments Webhook] Payment FAILED for session: ${sessionId}`);
+      await updatePurchaseStatus(sessionId, "failed");
+      await updateAnalysisSessionStatus(sessionId, "failed");
+    } else {
+      // Payment is still pending (waiting, confirming, etc.)
+      console.log(`[NOWPayments Webhook] Payment PENDING for session: ${sessionId} - Status: ${paymentStatus}`);
+      // Don't start analysis yet - wait for confirmed status
+    }
+
+    // Always respond with 200 to acknowledge receipt
+    res.json({ received: true, status: paymentStatus });
+  } catch (error) {
+    console.error("[NOWPayments Webhook] Error processing IPN:", error);
+    res.status(500).json({ error: "Webhook processing failed" });
+  }
+});
+
+/**
+ * LemonSqueezy Webhook Handler - COMMENTED OUT until company is established
+ * Uncomment this when ready to accept credit card payments
+ */
+/*
 webhookRouter.post("/lemonsqueezy", async (req: Request, res: Response) => {
+  // Import these when enabling:
+  // import { verifyWebhookSignature, parseWebhookEvent } from "./services/lemonSqueezyService";
+  
   const signature = req.headers["x-signature"] as string;
   
   if (!signature) {
@@ -31,50 +100,43 @@ webhookRouter.post("/lemonsqueezy", async (req: Request, res: Response) => {
     return res.status(400).json({ error: "Missing signature" });
   }
 
-  // Get raw body for signature verification
   const rawBody = (req as any).rawBody || JSON.stringify(req.body);
   
-  if (!verifyLemonSqueezySignature(rawBody, signature)) {
-    console.error("[LemonSqueezy Webhook] Invalid signature");
-    return res.status(400).json({ error: "Invalid signature" });
-  }
+  // Verify signature - uncomment when enabling
+  // if (!verifyWebhookSignature(rawBody, signature)) {
+  //   console.error("[LemonSqueezy Webhook] Invalid signature");
+  //   return res.status(400).json({ error: "Invalid signature" });
+  // }
 
-  const event = parseLemonSqueezyEvent(rawBody);
-  if (!event) {
-    console.error("[LemonSqueezy Webhook] Failed to parse event");
-    return res.status(400).json({ error: "Invalid event payload" });
-  }
+  // const event = parseWebhookEvent(rawBody);
+  // if (!event) {
+  //   console.error("[LemonSqueezy Webhook] Failed to parse event");
+  //   return res.status(400).json({ error: "Invalid event payload" });
+  // }
 
-  console.log("[LemonSqueezy Webhook] Received event:", event.meta.event_name);
+  // console.log("[LemonSqueezy Webhook] Received event:", event.meta.event_name);
 
   try {
-    const customData = event.meta.custom_data;
-    const sessionId = customData?.session_id;
+    // const customData = event.meta.custom_data;
+    // const sessionId = customData?.session_id;
 
-    if (!sessionId) {
-      console.error("[LemonSqueezy Webhook] Missing session_id in custom_data");
-      return res.status(400).json({ error: "Missing session_id" });
-    }
+    // if (!sessionId) {
+    //   console.error("[LemonSqueezy Webhook] Missing session_id in custom_data");
+    //   return res.status(400).json({ error: "Missing session_id" });
+    // }
 
-    switch (event.meta.event_name) {
-      case "order_created": {
-        // Payment completed - order was created successfully
-        await updatePurchaseStatus(sessionId, "completed", new Date());
-        console.log("[LemonSqueezy Webhook] Payment completed for session:", sessionId);
-        
-        // Start analysis
-        await startAnalysisAfterPayment(sessionId);
-        break;
-      }
-
-      case "order_refunded": {
-        // Payment was refunded
-        await updatePurchaseStatus(sessionId, "refunded");
-        await updateAnalysisSessionStatus(sessionId, "failed");
-        console.log("[LemonSqueezy Webhook] Payment refunded for session:", sessionId);
-        break;
-      }
-    }
+    // switch (event.meta.event_name) {
+    //   case "order_created": {
+    //     await updatePurchaseStatus(sessionId, "completed", new Date());
+    //     await startAnalysisAfterPayment(sessionId);
+    //     break;
+    //   }
+    //   case "order_refunded": {
+    //     await updatePurchaseStatus(sessionId, "refunded");
+    //     await updateAnalysisSessionStatus(sessionId, "failed");
+    //     break;
+    //   }
+    // }
 
     res.json({ received: true });
   } catch (error) {
@@ -82,73 +144,11 @@ webhookRouter.post("/lemonsqueezy", async (req: Request, res: Response) => {
     res.status(500).json({ error: "Webhook processing failed" });
   }
 });
-
-/**
- * Coinbase Commerce Webhook Handler
- */
-webhookRouter.post("/coinbase", async (req: Request, res: Response) => {
-  const signature = req.headers["x-cc-webhook-signature"] as string;
-  
-  if (!signature) {
-    console.error("[Coinbase Webhook] Missing signature");
-    return res.status(400).json({ error: "Missing signature" });
-  }
-
-  const rawBody = (req as any).rawBody || JSON.stringify(req.body);
-  
-  if (!verifyCoinbaseSignature(rawBody, signature)) {
-    console.error("[Coinbase Webhook] Invalid signature");
-    return res.status(400).json({ error: "Invalid signature" });
-  }
-
-  const event = req.body;
-  console.log("[Coinbase Webhook] Received event:", event.type);
-
-  try {
-    switch (event.type) {
-      case "charge:confirmed":
-      case "charge:completed": {
-        const charge = event.data;
-        const purchase = await getPurchaseByCoinbaseChargeId(charge.id);
-        
-        if (purchase) {
-          // Extract crypto amount if available
-          const cryptoPayment = charge.payments?.[0];
-          if (cryptoPayment) {
-            // Update with crypto details if needed
-          }
-          
-          await updatePurchaseStatus(purchase.sessionId, "completed", new Date());
-          console.log("[Coinbase Webhook] Payment completed for session:", purchase.sessionId);
-          
-          // Start analysis
-          await startAnalysisAfterPayment(purchase.sessionId);
-        }
-        break;
-      }
-
-      case "charge:failed": {
-        const charge = event.data;
-        const purchase = await getPurchaseByCoinbaseChargeId(charge.id);
-        
-        if (purchase) {
-          await updatePurchaseStatus(purchase.sessionId, "failed");
-          await updateAnalysisSessionStatus(purchase.sessionId, "failed");
-          console.log("[Coinbase Webhook] Payment failed for session:", purchase.sessionId);
-        }
-        break;
-      }
-    }
-
-    res.json({ received: true });
-  } catch (error) {
-    console.error("[Coinbase Webhook] Error processing event:", error);
-    res.status(500).json({ error: "Webhook processing failed" });
-  }
-});
+*/
 
 /**
  * Start analysis after successful payment
+ * This is called ONLY after payment is fully confirmed
  */
 async function startAnalysisAfterPayment(sessionId: string) {
   try {
@@ -158,7 +158,7 @@ async function startAnalysisAfterPayment(sessionId: string) {
       return;
     }
 
-    // Update session status
+    // Update session status to processing
     await updateAnalysisSessionStatus(sessionId, "processing");
 
     // Create initial result record
@@ -169,7 +169,7 @@ async function startAnalysisAfterPayment(sessionId: string) {
       problemStatement: session.problemStatement,
     });
 
-    // Notify owner
+    // Notify owner of new purchase
     const tierConfig = getTierConfig(session.tier);
     await notifyOwner({
       title: `New ${tierConfig?.displayName || session.tier} Purchase`,

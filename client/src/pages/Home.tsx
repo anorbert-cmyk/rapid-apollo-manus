@@ -563,12 +563,17 @@ export default function Home() {
                   variant="outline"
                 >
                   <CreditCard className="w-4 h-4 mr-2" />
-                  PAY WITH STRIPE
+                  CARD PAYMENT (Coming Soon)
                 </Button>
-                <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
-                  <Wallet className="w-3.5 h-3.5" />
-                  Pay with Any Crypto (Coinbase)
-                </button>
+                <Button
+                  onClick={() => handleStartAnalysis("standard")}
+                  disabled={!problemStatement.trim() || createSession.isPending}
+                  variant="outline"
+                  className="w-full text-xs"
+                >
+                  <Wallet className="w-3.5 h-3.5 mr-2" />
+                  Pay with Crypto (NOWPayments)
+                </Button>
               </div>
             </div>
 
@@ -612,12 +617,17 @@ export default function Home() {
                   className="w-full btn-primary"
                 >
                   <CreditCard className="w-4 h-4 mr-2" />
-                  PAY WITH STRIPE
+                  CARD PAYMENT (Coming Soon)
                 </Button>
-                <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
-                  <Wallet className="w-3.5 h-3.5" />
-                  Pay with Any Crypto (Coinbase)
-                </button>
+                <Button
+                  onClick={() => handleStartAnalysis("medium")}
+                  disabled={!problemStatement.trim() || createSession.isPending}
+                  variant="outline"
+                  className="w-full text-xs"
+                >
+                  <Wallet className="w-3.5 h-3.5 mr-2" />
+                  Pay with Crypto (NOWPayments)
+                </Button>
               </div>
             </div>
 
@@ -682,10 +692,15 @@ export default function Home() {
                     <CreditCard className="w-4 h-4 mr-2" />
                     START APEX ANALYSIS
                   </Button>
-                  <button className="w-full text-xs text-muted-foreground hover:text-foreground transition flex items-center justify-center gap-2">
-                    <Wallet className="w-3.5 h-3.5" />
-                    Pay with Any Crypto (Coinbase)
-                  </button>
+                  <Button
+                    onClick={() => handleStartAnalysis("full")}
+                    disabled={!problemStatement.trim() || createSession.isPending}
+                    variant="outline"
+                    className="w-full text-xs"
+                  >
+                    <Wallet className="w-3.5 h-3.5 mr-2" />
+                    Pay with Crypto (NOWPayments)
+                  </Button>
                 </div>
               </div>
             </div>

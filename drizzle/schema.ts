@@ -32,7 +32,7 @@ export const paymentStatusEnum = mysqlEnum("paymentStatus", ["pending", "complet
 /**
  * Payment method enum
  */
-export const paymentMethodEnum = mysqlEnum("paymentMethod", ["stripe", "coinbase", "paypal", "lemonsqueezy"]);
+export const paymentMethodEnum = mysqlEnum("paymentMethod", ["stripe", "coinbase", "paypal", "lemonsqueezy", "nowpayments"]);
 
 /**
  * Analysis sessions - links problem statement to payment and results
