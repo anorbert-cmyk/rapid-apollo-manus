@@ -12,6 +12,7 @@ import Admin from "./pages/Admin";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import History from "./pages/History";
 import MyAnalyses from "./pages/MyAnalyses";
+import DemoAnalysis from "./pages/DemoAnalysis";
 
 function Router() {
   return (
@@ -24,6 +25,7 @@ function Router() {
       <Route path="/payment-success/:sessionId" component={PaymentSuccess} />
       <Route path="/history" component={History} />
       <Route path="/my-analyses" component={MyAnalyses} />
+      <Route path="/demo-analysis" component={DemoAnalysis} />
       <Route path="/404" component={NotFound} />
       {/* Final fallback route */}
       <Route component={NotFound} />

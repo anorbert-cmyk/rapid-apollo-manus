@@ -58,14 +58,14 @@ const STATUS_CONFIG = {
   failed: { icon: AlertCircle, label: "Failed", color: "text-red-500" },
 };
 
-type ViewType = 'dashboard' | 'history' | 'output' | 'settings';
+type ViewType = 'output' | 'history';
 
 export default function Dashboard() {
   const { user } = useAuth();
   const [, navigate] = useLocation();
   const [isNewAnalysisOpen, setIsNewAnalysisOpen] = useState(false);
   const [newProblemStatement, setNewProblemStatement] = useState("");
-  const [currentView, setCurrentView] = useState<ViewType>('dashboard');
+  const [currentView, setCurrentView] = useState<ViewType>('output');
   const [selectedAnalysis, setSelectedAnalysis] = useState<any>(null);
 
   const { data: analyses, isLoading, refetch } = trpc.session.getMyAnalyses.useQuery();
@@ -142,22 +142,22 @@ export default function Dashboard() {
             </p>
 
             <button 
-              onClick={() => switchView('dashboard')}
+              onClick={() => switchView('output')}
               className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 group relative overflow-hidden ${
-                currentView === 'dashboard' ? 'sidebar-item-active' : 'text-muted-foreground hover:text-foreground hover:bg-accent'
+                currentView === 'output' ? 'sidebar-item-active' : 'text-muted-foreground hover:text-foreground hover:bg-accent'
               }`}
             >
-              <div className={`absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/10 ${currentView === 'dashboard' ? 'opacity-100' : 'opacity-0'} transition-opacity`} />
+              <div className={`absolute inset-0 bg-gradient-to-r from-indigo-500/20 to-purple-500/10 ${currentView === 'output' ? 'opacity-100' : 'opacity-0'} transition-opacity`} />
               <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                currentView === 'dashboard' ? 'bg-indigo-500/20' : 'bg-accent'
+                currentView === 'output' ? 'bg-indigo-500/20' : 'bg-accent'
               }`}>
-                <LayoutDashboard className={`w-5 h-5 ${currentView === 'dashboard' ? 'text-indigo-400' : 'text-muted-foreground'}`} />
+                <FileText className={`w-5 h-5 ${currentView === 'output' ? 'text-indigo-400' : 'text-muted-foreground'}`} />
               </div>
               <div className="hidden lg:block relative z-10">
-                <span className={`text-sm font-medium ${currentView === 'dashboard' ? 'text-foreground' : 'text-muted-foreground'}`}>Dashboard</span>
-                <p className={`text-[10px] ${currentView === 'dashboard' ? 'text-indigo-400/70' : 'text-muted-foreground'}`}>Overview & Results</p>
+                <span className={`text-sm font-medium ${currentView === 'output' ? 'text-foreground' : 'text-muted-foreground'}`}>Output</span>
+                <p className={`text-[10px] ${currentView === 'output' ? 'text-indigo-400/70' : 'text-muted-foreground'}`}>Current Analysis</p>
               </div>
-              {currentView === 'dashboard' && (
+              {currentView === 'output' && (
                 <div className="hidden lg:block ml-auto relative z-10">
                   <span className="w-2 h-2 bg-green-400 rounded-full animate-pulse inline-block" />
                 </div>
@@ -177,42 +177,7 @@ export default function Dashboard() {
               </div>
               <div className="hidden lg:block">
                 <span className="text-sm font-medium">History</span>
-                <p className="text-[10px] text-muted-foreground">Past Sessions</p>
-              </div>
-            </button>
-
-            <button 
-              onClick={() => switchView('output')}
-              className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 group relative ${
-                currentView === 'output' ? 'sidebar-item-active' : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-              }`}
-            >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                currentView === 'output' ? 'bg-indigo-500/20' : 'bg-accent'
-              }`}>
-                <FileText className={`w-5 h-5 ${currentView === 'output' ? 'text-indigo-400' : ''}`} />
-              </div>
-              <div className="hidden lg:block">
-                <span className="text-sm font-medium">Output</span>
-                <p className="text-[10px] text-muted-foreground">Product Strategy</p>
-              </div>
-              <span className="hidden lg:flex ml-auto text-[9px] font-mono bg-cyan-500/20 text-cyan-400 px-2 py-0.5 rounded-full border border-cyan-500/30">NEW</span>
-            </button>
-
-            <button 
-              onClick={() => switchView('settings')}
-              className={`w-full flex items-center gap-4 px-4 py-3.5 rounded-xl transition-all duration-200 group relative ${
-                currentView === 'settings' ? 'sidebar-item-active' : 'text-muted-foreground hover:text-foreground hover:bg-accent'
-              }`}
-            >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all ${
-                currentView === 'settings' ? 'bg-indigo-500/20' : 'bg-accent'
-              }`}>
-                <Settings className={`w-5 h-5 ${currentView === 'settings' ? 'text-indigo-400' : ''}`} />
-              </div>
-              <div className="hidden lg:block">
-                <span className="text-sm font-medium">Settings</span>
-                <p className="text-[10px] text-muted-foreground">Preferences</p>
+                <p className="text-[10px] text-muted-foreground">Past Analyses</p>
               </div>
             </button>
           </nav>
@@ -339,8 +304,8 @@ export default function Dashboard() {
 
           {/* Scrollable Content */}
           <div className="flex-1 overflow-y-auto p-8 scroll-smooth">
-            {/* VIEW: DASHBOARD (Bento Grid) */}
-            {currentView === 'dashboard' && (
+            {/* Dashboard view removed - only Output and History remain */}
+            {false && (
               <div className="w-full grid grid-cols-1 md:grid-cols-12 gap-6 animate-slide-up pb-8">
                 {/* ROW 1: METRICS & CONTEXT */}
                 
@@ -702,6 +667,23 @@ export default function Dashboard() {
                 <div className="flex items-center justify-between">
                   <h2 className="text-xl font-bold text-foreground">Output & Strategy</h2>
                 </div>
+
+                {/* Overview Section - Executive Summary */}
+                {latestAnalysis && (
+                  <div className="dash-panel p-6 bg-gradient-to-br from-indigo-500/5 to-purple-500/5 border-indigo-500/20">
+                    <div className="flex items-center gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-indigo-500/10">
+                        <Brain className="h-5 w-5 text-indigo-400" />
+                      </div>
+                      <h3 className="text-lg font-semibold text-foreground">Overview</h3>
+                    </div>
+                    <div className="prose prose-invert max-w-none">
+                      <p className="text-sm text-muted-foreground leading-relaxed">
+                        This strategic analysis examines your problem statement through the APEX framework, delivering actionable insights across four critical dimensions. The Discovery phase identifies core challenges and market opportunities, establishing a foundation for strategic decision-making. Our Strategic Design section outlines a phased roadmap with clear milestones and resource allocation. The AI Toolkit provides ready-to-use prompts and technical specifications to accelerate implementation. Finally, the Risk & Metrics component quantifies potential obstacles and defines success criteria, ensuring your strategy remains data-driven and adaptable. Each section is designed to transform your initial concept into a validated, executable plan with measurable outcomes.
+                      </p>
+                    </div>
+                  </div>
+                )}
                 
                 {completedAnalyses.length > 0 ? (
                   <div className="grid gap-6">
@@ -747,8 +729,8 @@ export default function Dashboard() {
               </div>
             )}
 
-            {/* VIEW: SETTINGS */}
-            {currentView === 'settings' && (
+            {/* Settings view removed */}
+            {false && (
               <div className="animate-slide-up space-y-6">
                 <h2 className="text-xl font-bold text-foreground">Settings</h2>
                 

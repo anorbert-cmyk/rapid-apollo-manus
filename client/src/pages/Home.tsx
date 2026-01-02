@@ -253,24 +253,12 @@ export default function Home() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={() => navigate("/analysis/test-apex-demo-LAIdJqey")}
+              onClick={() => navigate("/demo-analysis")}
               className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 sm:gap-1.5 text-cyan-400 hover:text-cyan-300 px-2 sm:px-3"
             >
               <Eye className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
               <span className="hidden xs:inline">Demo</span>
             </Button>
-            
-            {isAuthenticated && (
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => navigate("/dashboard")}
-                className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest flex items-center gap-1 sm:gap-1.5 px-2 sm:px-3"
-              >
-                <LayoutDashboard className="w-3 sm:w-3.5 h-3 sm:h-3.5" />
-                <span className="hidden sm:inline">Dashboard</span>
-              </Button>
-            )}
 
             {/* Theme Toggle - simplified on mobile */}
             <button
