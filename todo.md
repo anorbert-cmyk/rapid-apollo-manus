@@ -498,3 +498,13 @@
 - [x] Create Observer masterprompt (prompts/observer_masterprompt.md)
 - [x] Create Insider masterprompt (prompts/insider_masterprompt.md)
 - [x] Update Syndicate masterprompt (prompts/syndicate_masterprompt.md)
+
+
+## Masterprompt Backend Integration - January 3, 2026
+- [x] Analyze current analysis generation code structure
+- [x] Create tier-specific prompt service (Observer, Insider, Syndicate)
+- [x] Update analysis router to use tier-specific prompts
+- [x] Observer: 1-part analysis, ~4000 tokens (generateSingleAnalysis)
+- [x] Insider: 2-part analysis, ~12000 tokens (generateInsiderAnalysis)
+- [x] Syndicate: 4-part analysis, ~28000 tokens (generateMultiPartAnalysis)
+- [x] Write tests for tier-specific analysis generation (17 tests passed)

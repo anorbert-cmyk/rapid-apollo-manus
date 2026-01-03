@@ -6,6 +6,14 @@
 
 import { invokeLLM } from "../_core/llm";
 import { Tier, isMultiPartTier, MULTI_PART_CONFIG } from "../../shared/pricing";
+import {
+  OBSERVER_SYSTEM_PROMPT,
+  getObserverPrompt,
+  INSIDER_SYSTEM_PROMPT,
+  getInsiderInitialPrompt,
+  getInsiderContinuePrompt,
+  getTierPromptConfig,
+} from "./tierPromptService";
 
 // ===========================================
 // PROMPT INJECTION DEFENSE
@@ -471,12 +479,19 @@ export interface MultiPartResult {
   generatedAt: number;
 }
 
+export interface InsiderResult {
+  part1: string;
+  part2: string;
+  fullMarkdown: string;
+  generatedAt: number;
+}
+
 // ===========================================
 // MAIN FUNCTIONS
 // ===========================================
 
 /**
- * Generate single-call analysis for Standard and Medium tiers
+ * Generate single-call analysis for Standard (Observer) tier
  */
 export async function generateSingleAnalysis(
   problemStatement: string,
@@ -489,21 +504,34 @@ export async function generateSingleAnalysis(
     console.warn('[Perplexity] Potential prompt injection attempt detected:', flags.length, 'patterns');
   }
 
-  const prompt = tier === "standard" 
-    ? STANDARD_PROMPT(sanitized)
-    : MEDIUM_PROMPT(sanitized);
+  // Use new tier-specific prompts
+  const systemPrompt = tier === "standard" 
+    ? OBSERVER_SYSTEM_PROMPT
+    : INSIDER_SYSTEM_PROMPT;
+  
+  const userPrompt = tier === "standard"
+    ? getObserverPrompt(sanitized)
+    : MEDIUM_PROMPT(sanitized); // Medium tier now uses 2-part, but keep fallback
+
+  console.log(`[Perplexity] Generating ${tier} tier analysis`);
 
   const response = await invokeLLM({
     messages: [
+      {
+        role: "system",
+        content: systemPrompt
+      },
       { 
         role: "user", 
-        content: prompt
+        content: userPrompt
       },
     ],
   });
 
   const rawContent = response.choices[0]?.message?.content;
   const content = typeof rawContent === "string" ? rawContent : "";
+
+  console.log(`[Perplexity] ${tier} tier analysis completed, length: ${content.length}`);
 
   return {
     content,
@@ -512,7 +540,108 @@ export async function generateSingleAnalysis(
 }
 
 /**
- * Generate multi-part sequential analysis for Full/Premium tier
+ * Generate 2-part sequential analysis for Insider (Medium) tier
+ * Maintains conversation context across both parts
+ */
+export async function generateInsiderAnalysis(
+  problemStatement: string,
+  callbacks?: AnalysisCallbacks
+): Promise<InsiderResult> {
+  // Sanitize input
+  const { sanitized, flags } = sanitizeInput(problemStatement);
+  
+  if (flags.length > 0) {
+    console.warn('[Perplexity] Potential prompt injection attempt detected:', flags.length, 'patterns');
+  }
+
+  const result: InsiderResult = {
+    part1: "",
+    part2: "",
+    fullMarkdown: "",
+    generatedAt: 0,
+  };
+
+  // Conversation history to maintain context
+  const conversationHistory: Array<{ role: "system" | "user" | "assistant"; content: string }> = [
+    { role: "system", content: INSIDER_SYSTEM_PROMPT },
+  ];
+
+  try {
+    // Process each of the 2 parts sequentially
+    for (let partNum = 1; partNum <= 2; partNum++) {
+      console.log(`[Perplexity] Starting Insider Part ${partNum}/2 generation`);
+
+      // Build the prompt for this part
+      const userPrompt = partNum === 1 
+        ? getInsiderInitialPrompt(sanitized)
+        : getInsiderContinuePrompt(2);
+
+      // Add user prompt to conversation history
+      conversationHistory.push({ role: "user", content: userPrompt });
+
+      // Make API call with full conversation context
+      const response = await invokeLLM({
+        messages: conversationHistory,
+      });
+
+      const rawContent = response.choices[0]?.message?.content;
+      const partContent = typeof rawContent === "string" ? rawContent : "";
+
+      // Store the result
+      if (partNum === 1) {
+        result.part1 = partContent;
+      } else {
+        result.part2 = partContent;
+      }
+
+      // Add assistant response to conversation history for next part
+      conversationHistory.push({ role: "assistant", content: partContent });
+
+      // Notify part completion
+      callbacks?.onPartComplete?.(partNum, partContent);
+
+      console.log(`[Perplexity] Completed Insider Part ${partNum}/2, length: ${partContent.length}`);
+    }
+
+    // Combine all parts into full markdown
+    result.fullMarkdown = [
+      "# 🔍 Strategic Blueprint Analysis\n",
+      "---\n",
+      "## Part 1: Discovery & Problem Analysis\n",
+      result.part1,
+      "\n---\n",
+      "## Part 2: Strategic Design & Roadmap\n",
+      result.part2,
+    ].join("\n");
+
+    result.generatedAt = Date.now();
+
+    // Notify completion (convert to MultiPartResult format for compatibility)
+    if (callbacks?.onComplete) {
+      callbacks.onComplete({
+        part1: result.part1,
+        part2: result.part2,
+        part3: "",
+        part4: "",
+        fullMarkdown: result.fullMarkdown,
+        generatedAt: result.generatedAt,
+      });
+    }
+
+    console.log(`[Perplexity] Insider analysis completed, total length: ${result.fullMarkdown.length}`);
+
+    return result;
+
+  } catch (error) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    console.error("[Perplexity] Insider analysis failed:", err);
+    callbacks?.onError?.(err);
+    throw err;
+  }
+}
+
+/**
+ * Generate multi-part sequential analysis for Full/Premium (Syndicate) tier
  * Maintains conversation context across all 4 parts
  */
 export async function generateMultiPartAnalysis(
@@ -610,15 +739,32 @@ export async function generateMultiPartAnalysis(
 
 /**
  * Generate analysis based on tier
+ * - Observer (standard): Single-part quick validation
+ * - Insider (medium): 2-part strategic blueprint
+ * - Syndicate (full): 4-part comprehensive APEX analysis
  */
 export async function generateAnalysis(
   problemStatement: string,
   tier: Tier,
   callbacks?: AnalysisCallbacks
-): Promise<SingleAnalysisResult | MultiPartResult> {
-  if (isMultiPartTier(tier)) {
-    return generateMultiPartAnalysis(problemStatement, callbacks);
-  } else {
-    return generateSingleAnalysis(problemStatement, tier as "standard" | "medium");
+): Promise<SingleAnalysisResult | MultiPartResult | InsiderResult> {
+  console.log(`[Perplexity] Starting ${tier} tier analysis`);
+  
+  switch (tier) {
+    case "standard":
+      // Observer tier: Single-part quick validation
+      return generateSingleAnalysis(problemStatement, "standard");
+    
+    case "medium":
+      // Insider tier: 2-part strategic blueprint
+      return generateInsiderAnalysis(problemStatement, callbacks);
+    
+    case "full":
+      // Syndicate tier: 4-part comprehensive APEX analysis
+      return generateMultiPartAnalysis(problemStatement, callbacks);
+    
+    default:
+      console.warn(`[Perplexity] Unknown tier: ${tier}, falling back to standard`);
+      return generateSingleAnalysis(problemStatement, "standard");
   }
 }
