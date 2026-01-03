@@ -679,3 +679,14 @@
 - [ ] Track which variant each user sees
 - [ ] Store conversion data per variant
 - [ ] Add admin view for A/B test results
+
+## Demo Gate UX - January 2025
+
+- [x] Add "Check your inbox" message after email submission
+- [x] Show verification pending state
+
+## Email Cron Job - January 2025
+
+- [x] Verify Email 1 sends after demo verification
+- [x] Set up hourly cron job for emails 2-4 (runs every hour at :00)
+- [x] Cron endpoint enabled at /api/cron/process-emails
