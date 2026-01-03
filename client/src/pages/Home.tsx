@@ -559,12 +559,12 @@ export default function Home() {
                   </h3>
                 </div>
                 <span className="px-2 py-1 text-[10px] font-bold bg-muted border border-border rounded-full text-muted-foreground tracking-wider">
-                  QUICK VALIDATION
+                  SANITY CHECK
                 </span>
               </div>
 
-              <h4 className="text-xl font-bold mb-2 font-playfair">Validate Your Idea</h4>
-              <p className="text-xs text-muted-foreground mb-4">Get a clear GO/NO-GO decision with actionable next steps in 24 hours.</p>
+              <h4 className="text-xl font-bold mb-2 font-playfair">Quick Sanity Check</h4>
+              <p className="text-xs text-muted-foreground mb-4">Is your idea worth exploring further? Get clarity in 24 hours.</p>
 
               <div className="mb-6">
                 <span className="text-4xl font-bold font-playfair">${TIER_CONFIGS.standard.priceUsd}</span>
@@ -574,19 +574,19 @@ export default function Home() {
               <ul className="space-y-3 mb-8 text-sm text-muted-foreground">
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-muted-foreground" />
-                  Problem-Market Fit Analysis
+                  Problem Statement Analysis
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-muted-foreground" />
-                  Top 5 User Pain Points
+                  Top 3 User Pain Points
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-muted-foreground" />
-                  Go/No-Go Recommendation
+                  Quick Viability Score (1-10)
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-muted-foreground" />
-                  3 Immediate Action Items
+                  1 Recommended Next Step
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-muted-foreground" />
@@ -601,11 +601,11 @@ export default function Home() {
                   className="w-full btn-secondary"
                   variant="outline"
                 >
-                  Validate My Idea
+                  Get Sanity Check
                 </Button>
               </div>
               
-              <p className="text-[10px] text-muted-foreground text-center mt-4">Perfect for early-stage founders testing concepts</p>
+              <p className="text-[10px] text-muted-foreground text-center mt-4">Perfect for early exploration and quick validation</p>
             </div>
 
             {/* Tier 2: Insider (Highlighted) */}
@@ -639,6 +639,10 @@ export default function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-primary" />
+                  Live Competitor Research (3-5 competitors)
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-primary" />
                   Strategic Design Roadmap
                 </li>
                 <li className="flex items-center gap-2">
@@ -655,7 +659,11 @@ export default function Home() {
                 </li>
                 <li className="flex items-center gap-2">
                   <CheckCircle className="w-4 h-4 text-primary" />
-                  1-2 Hours Delivery
+                  Error Path & Recovery Mapping
+                </li>
+                <li className="flex items-center gap-2">
+                  <CheckCircle className="w-4 h-4 text-primary" />
+                  24h Delivery
                 </li>
               </ul>
 
@@ -694,9 +702,9 @@ export default function Home() {
                 <p className="text-xs text-muted-foreground mb-4">Enterprise-grade 4-part analysis with 10 production-ready design prompts you can build from today.</p>
                 
                 {/* State-of-the-Art AI Badge */}
-                <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-purple-950/50 rounded-lg border border-purple-500/20">
+                <div className="flex items-center gap-2 mb-4 px-3 py-2 bg-purple-950/50 dark:bg-purple-950/50 bg-purple-100 rounded-lg border border-purple-500/20 dark:border-purple-500/20 border-purple-300">
                   <div className="w-2 h-2 rounded-full bg-purple-500 animate-pulse" />
-                  <span className="text-[10px] font-mono text-purple-400">Powered by State-of-the-Art AI</span>
+                  <span className="text-[10px] font-mono text-purple-700 dark:text-purple-400">Powered by State-of-the-Art AI</span>
                 </div>
 
                 <div className="mb-6">

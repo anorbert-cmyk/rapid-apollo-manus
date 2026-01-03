@@ -33,8 +33,8 @@ describe("tierPromptService", () => {
   describe("Observer Tier Prompts", () => {
     it("should have a valid system prompt", () => {
       expect(OBSERVER_SYSTEM_PROMPT).toBeDefined();
-      expect(OBSERVER_SYSTEM_PROMPT).toContain("rapid validation");
-      expect(OBSERVER_SYSTEM_PROMPT).toContain("GO/NO-GO");
+      expect(OBSERVER_SYSTEM_PROMPT).toContain("sanity check");
+      expect(OBSERVER_SYSTEM_PROMPT).toContain("viability");
     });
 
     it("should generate user prompt with problem statement", () => {
@@ -42,15 +42,16 @@ describe("tierPromptService", () => {
       const prompt = getObserverPrompt(problem);
       
       expect(prompt).toContain(problem);
-      expect(prompt).toContain("QUICK VALIDATION ANALYSIS");
+      expect(prompt).toContain("QUICK SANITY CHECK");
       expect(prompt).toContain("OBSERVER TIER");
-      expect(prompt).toContain("Top 5 User Pain Points");
-      expect(prompt).toContain("GO/NO-GO Recommendation");
+      expect(prompt).toContain("TOP 3 USER PAIN POINTS");
+      expect(prompt).toContain("QUICK VIABILITY SCORE");
     });
 
-    it("should NOT include competitor analysis in Observer prompt", () => {
+    it("should NOT include Go/No-Go recommendation in Observer prompt", () => {
       const prompt = getObserverPrompt("test problem");
-      expect(prompt).not.toContain("Competitor Analysis");
+      // Observer provides viability score, not Go/No-Go (that's Insider)
+      expect(prompt).not.toContain("GO/NO-GO Recommendation");
     });
   });
 

@@ -508,3 +508,18 @@
 - [x] Insider: 2-part analysis, ~12000 tokens (generateInsiderAnalysis)
 - [x] Syndicate: 4-part analysis, ~28000 tokens (generateMultiPartAnalysis)
 - [x] Write tests for tier-specific analysis generation (17 tests passed)
+
+
+## Tier-Specific Email Templates - January 3, 2026
+- [ ] Analyze current email service structure
+- [ ] Create Observer tier email template (Quick Validation focus)
+- [ ] Create Insider tier email template (Strategic Blueprint focus)
+- [ ] Create Syndicate tier email template (APEX + Design Prompts focus)
+- [ ] Integrate templates into email service
+- [ ] Test email sending for each tier
+
+
+## Insider Tier Update - January 3, 2026
+- [ ] Update Insider pricing card features in Home.tsx
+- [ ] Replace Insider masterprompt with new version
+- [ ] Update tierPromptService.ts with new Insider prompts
