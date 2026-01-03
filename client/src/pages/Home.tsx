@@ -211,7 +211,7 @@ export default function Home() {
     {
       question: "Can I upgrade my tier later?",
       answer:
-        "Yes! You can upgrade any existing analysis to a higher tier at any time. You'll only pay the difference and receive the additional insights immediately.",
+        "Each tier runs a completely different AI analysis pipeline optimized for that specific depth level. Higher tiers don't simply add more content—they use different reasoning models, deeper research chains, and specialized prompts that must process your problem statement from scratch. This ensures you get the most accurate and contextually relevant insights for your chosen tier, rather than retrofitted additions to a lighter analysis.",
     },
     {
       question: "What is your refund policy?",
