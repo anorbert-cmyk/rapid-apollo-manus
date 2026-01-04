@@ -870,3 +870,18 @@
 - [x] Add the section to Demo Analysis page (Part 3 - Strategic Roadmap tab)
 - [x] Include practical examples of how to use each prompt (value proposition + when to use)
 - [x] Added summary stats: Total Prompts (10), Time Saved (50+ hrs), Value ($2,000+), Copy & Use (Instant)
+
+
+## Demo Page Structure Reorganization - January 4, 2026
+- [ ] Remove Figma prompts section from Part 3 tab (keep only Strategic Roadmap content)
+- [ ] Add 5 Core Figma prompt cards to Part 4 tab with Value section
+- [ ] Add 5 Advanced Figma prompt cards to Part 5 tab with Value section
+- [ ] Ensure Demo structure matches real Syndicate analysis output
+
+
+## Demo Page Structure Reorganization - January 4, 2026
+- [x] Remove Figma prompts section from Part 3 tab (keep only Strategic Roadmap)
+- [x] Add Figma prompt cards to Part 4 tab (5 Core prompts)
+- [x] Add Figma prompt cards to Part 5 tab (5 Advanced prompts)
+- [x] Move Value and Use Cases section to Part 4 and Part 5 tabs (with category filtering)
+- [x] Test all 6 tabs display correct content matching real Syndicate structure (324 tests passing)

@@ -191,11 +191,15 @@ const FIGMA_PROMPTS_VALUE_DATA = [
 ];
 
 // Figma Prompts Value Section Component
-function FigmaPromptsValueSection({ isUnlocked }: { isUnlocked: boolean }) {
+function FigmaPromptsValueSection({ isUnlocked, category }: { isUnlocked: boolean; category?: "Core" | "Advanced" | "All" }) {
   const [expandedPrompt, setExpandedPrompt] = useState<number | null>(null);
   
   const corePrompts = FIGMA_PROMPTS_VALUE_DATA.filter(p => p.category === "Core");
   const advancedPrompts = FIGMA_PROMPTS_VALUE_DATA.filter(p => p.category === "Advanced");
+  
+  // Filter based on category prop
+  const showCore = !category || category === "All" || category === "Core";
+  const showAdvanced = !category || category === "All" || category === "Advanced";
   
   const totalTimeSaved = FIGMA_PROMPTS_VALUE_DATA.reduce((acc, p) => {
     const hours = parseInt(p.timeSaved.split("-")[1] || p.timeSaved.split("-")[0]);
@@ -237,7 +241,7 @@ function FigmaPromptsValueSection({ isUnlocked }: { isUnlocked: boolean }) {
       </div>
       
       {/* Core Prompts Section */}
-      <div>
+      {showCore && <div>
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-lg bg-yellow-500/20 flex items-center justify-center">
             <Star className="h-5 w-5 text-yellow-500" />
@@ -328,10 +332,10 @@ function FigmaPromptsValueSection({ isUnlocked }: { isUnlocked: boolean }) {
             );
           })}
         </div>
-      </div>
+      </div>}
       
       {/* Advanced Prompts Section */}
-      <div>
+      {showAdvanced && <div>
         <div className="flex items-center gap-3 mb-4">
           <div className="w-10 h-10 rounded-lg bg-green-500/20 flex items-center justify-center">
             <Lightbulb className="h-5 w-5 text-green-500" />
@@ -422,7 +426,7 @@ function FigmaPromptsValueSection({ isUnlocked }: { isUnlocked: boolean }) {
             );
           })}
         </div>
-      </div>
+      </div>}
       
       {/* Bottom CTA */}
       {isUnlocked && (
@@ -1125,78 +1129,27 @@ export default function DemoAnalysis() {
             </Card>
           </TabsContent>
 
-          {/* Part 3 Tab - Figma Prompts */}
+          {/* Part 3 Tab - Strategic Roadmap */}
           <TabsContent value="part3">
             <Card className={`glass-panel ${PART_CONFIG[2].borderColor} bg-gradient-to-br ${PART_CONFIG[2].gradient}`}>
               <CardHeader>
                 <div className="flex items-center justify-between">
                   <CardTitle className="flex items-center gap-2">
                     <div className={`w-10 h-10 rounded-lg ${PART_CONFIG[2].bgColor}/20 flex items-center justify-center`}>
-                      <Lightbulb className={`h-5 w-5 ${PART_CONFIG[2].color}`} />
+                      <Layers className={`h-5 w-5 ${PART_CONFIG[2].color}`} />
                     </div>
                     <div>
                       <span className="block">Part 3: {PART_CONFIG[2].name}</span>
                       <span className="text-sm font-normal text-muted-foreground">{PART_CONFIG[2].description}</span>
                     </div>
                   </CardTitle>
+                  {isUnlocked && <CopyButton text={part3} label="Copy All" />}
                 </div>
               </CardHeader>
               <CardContent>
-                {/* Figma Prompts Section - Only detailed collapsible cards */}
-                <div className="border border-yellow-500/30 rounded-xl overflow-hidden bg-gradient-to-br from-yellow-500/5 via-background to-orange-500/5">
-                  <div className="p-6 border-b border-yellow-500/20">
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-3">
-                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-yellow-500/20 to-orange-500/20 border border-yellow-500/30 flex items-center justify-center">
-                          <Palette className="h-6 w-6 text-yellow-500" />
-                        </div>
-                        <div>
-                          <h3 className="font-bold text-lg">10 Production-Ready Design Prompts</h3>
-                          <p className="text-sm text-muted-foreground">Copy and paste into any design tool</p>
-                        </div>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <span className="px-3 py-1 text-xs font-medium bg-yellow-500/20 text-yellow-500 rounded-full">
-                          High-Fidelity Design
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className={`p-6 ${!isUnlocked ? 'blur-sm select-none pointer-events-none' : ''}`}>
-                    <div className="grid gap-4 md:grid-cols-2">
-                      {figmaPrompts.map((prompt, index) => (
-                        <FigmaPromptCard
-                          key={index}
-                          number={prompt.number}
-                          title={prompt.title}
-                          description={prompt.description}
-                          prompt={prompt.prompt}
-                          screen={prompt.screen}
-                          locked={!isUnlocked}
-                        />
-                      ))}
-                    </div>
-                  </div>
+                <div className={`prose prose-invert max-w-none ${!isUnlocked ? 'blur-sm select-none pointer-events-none' : ''}`}>
+                  <Streamdown>{part3}</Streamdown>
                 </div>
-                
-                {/* Value & Use Cases Section */}
-                <div className="mt-8">
-                  <div className="flex items-center gap-3 mb-6">
-                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center">
-                      <BookOpen className="h-5 w-5 text-purple-500" />
-                    </div>
-                    <div>
-                      <h3 className="font-bold text-lg">Value & Use Cases</h3>
-                      <p className="text-sm text-muted-foreground">Understand when and why to use each prompt</p>
-                    </div>
-                  </div>
-                  
-                  <div className={`${!isUnlocked ? 'blur-sm select-none pointer-events-none' : ''}`}>
-                    <FigmaPromptsValueSection isUnlocked={isUnlocked} />
-                  </div>
-                </div>
-                
                 {!isUnlocked && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
@@ -1223,13 +1176,64 @@ export default function DemoAnalysis() {
                       <span className="text-sm font-normal text-muted-foreground">{PART_CONFIG[3].description}</span>
                     </div>
                   </CardTitle>
-                  {isUnlocked && <CopyButton text={part4} label="Copy All" />}
                 </div>
               </CardHeader>
               <CardContent>
-                <div className={`prose prose-invert max-w-none ${!isUnlocked ? 'blur-sm select-none pointer-events-none' : ''}`}>
-                  <Streamdown>{part4}</Streamdown>
+                {/* Core Figma Prompts Section */}
+                <div className="border border-purple-500/30 rounded-xl overflow-hidden bg-gradient-to-br from-purple-500/5 via-background to-pink-500/5">
+                  <div className="p-6 border-b border-purple-500/20">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-purple-500/20 to-pink-500/20 border border-purple-500/30 flex items-center justify-center">
+                          <Palette className="h-6 w-6 text-purple-500" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-lg">5 Core Design Prompts</h3>
+                          <p className="text-sm text-muted-foreground">Essential screens for any product launch</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 text-xs font-medium bg-purple-500/20 text-purple-500 rounded-full">
+                          High-Priority
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className={`p-6 ${!isUnlocked ? 'blur-sm select-none pointer-events-none' : ''}`}>
+                    <div className="grid gap-4">
+                      {figmaPrompts.filter(p => p.number <= 5).map((prompt, index) => (
+                        <FigmaPromptCard
+                          key={index}
+                          number={prompt.number}
+                          title={prompt.title}
+                          description={prompt.description}
+                          prompt={prompt.prompt}
+                          screen={prompt.screen}
+                          locked={!isUnlocked}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
+                
+                {/* Value & Use Cases Section for Core Prompts */}
+                <div className="mt-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-blue-500/20 to-cyan-500/20 border border-blue-500/30 flex items-center justify-center">
+                      <BookOpen className="h-5 w-5 text-blue-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">Value & Use Cases</h3>
+                      <p className="text-sm text-muted-foreground">Understand when and why to use each core prompt</p>
+                    </div>
+                  </div>
+                  
+                  <div className={`${!isUnlocked ? 'blur-sm select-none pointer-events-none' : ''}`}>
+                    <FigmaPromptsValueSection isUnlocked={isUnlocked} category="Core" />
+                  </div>
+                </div>
+                
                 {!isUnlocked && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
@@ -1256,13 +1260,64 @@ export default function DemoAnalysis() {
                       <span className="text-sm font-normal text-muted-foreground">{PART_CONFIG[4].description}</span>
                     </div>
                   </CardTitle>
-                  {isUnlocked && <CopyButton text={part5} label="Copy All" />}
                 </div>
               </CardHeader>
               <CardContent>
-                <div className={`prose prose-invert max-w-none ${!isUnlocked ? 'blur-sm select-none pointer-events-none' : ''}`}>
-                  <Streamdown>{part5}</Streamdown>
+                {/* Advanced Figma Prompts Section */}
+                <div className="border border-green-500/30 rounded-xl overflow-hidden bg-gradient-to-br from-green-500/5 via-background to-emerald-500/5">
+                  <div className="p-6 border-b border-green-500/20">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 flex items-center justify-center">
+                          <Lightbulb className="h-6 w-6 text-green-500" />
+                        </div>
+                        <div>
+                          <h3 className="font-bold text-lg">5 Advanced Design Prompts</h3>
+                          <p className="text-sm text-muted-foreground">Edge cases that separate good from great</p>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <span className="px-3 py-1 text-xs font-medium bg-green-500/20 text-green-500 rounded-full">
+                          Pro-Level
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className={`p-6 ${!isUnlocked ? 'blur-sm select-none pointer-events-none' : ''}`}>
+                    <div className="grid gap-4">
+                      {figmaPrompts.filter(p => p.number > 5).map((prompt, index) => (
+                        <FigmaPromptCard
+                          key={index}
+                          number={prompt.number}
+                          title={prompt.title}
+                          description={prompt.description}
+                          prompt={prompt.prompt}
+                          screen={prompt.screen}
+                          locked={!isUnlocked}
+                        />
+                      ))}
+                    </div>
+                  </div>
                 </div>
+                
+                {/* Value & Use Cases Section for Advanced Prompts */}
+                <div className="mt-8">
+                  <div className="flex items-center gap-3 mb-6">
+                    <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-green-500/20 to-emerald-500/20 border border-green-500/30 flex items-center justify-center">
+                      <BookOpen className="h-5 w-5 text-green-500" />
+                    </div>
+                    <div>
+                      <h3 className="font-bold text-lg">Value & Use Cases</h3>
+                      <p className="text-sm text-muted-foreground">Understand when and why to use each advanced prompt</p>
+                    </div>
+                  </div>
+                  
+                  <div className={`${!isUnlocked ? 'blur-sm select-none pointer-events-none' : ''}`}>
+                    <FigmaPromptsValueSection isUnlocked={isUnlocked} category="Advanced" />
+                  </div>
+                </div>
+                
                 {!isUnlocked && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="text-center">
