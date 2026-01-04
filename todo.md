@@ -808,3 +808,16 @@
 - [x] Implement manual regeneration with selective part regeneration option (fromPart parameter)
 - [x] Add audit logging for all admin operations (admin_audit_log table)
 - [x] Write comprehensive tests for state machine and API endpoints (68 tests, 279 total)
+
+
+## State Machine Integration into Analysis Flow - January 4, 2026
+- [x] Create SafeOperationTracker wrapper with fire-and-forget pattern
+- [x] Implement graceful degradation - analysis continues even if tracking fails
+- [x] Add idempotent operation handling to prevent duplicate state transitions
+- [x] Integrate tracking into Observer tier (1 part) generation
+- [x] Integrate tracking into Insider tier (2 parts) generation
+- [x] Integrate tracking into Syndicate tier (6 parts) generation
+- [x] Handle edge cases: DB timeout, connection reset, duplicate calls
+- [x] Add circuit breaker for tracking to prevent cascade failures
+- [x] Write integration tests for all edge cases (45 tests)
+- [x] Verify payment flow remains unaffected by tracking code (324 total tests passing)

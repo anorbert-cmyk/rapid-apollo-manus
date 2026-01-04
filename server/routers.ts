@@ -126,6 +126,18 @@ import {
   triggerRegeneration,
   TIER_PARTS
 } from "./services/analysisStateMachine";
+import {
+  trackAnalysisStart,
+  trackPartStart,
+  trackPartComplete,
+  trackPartFailure,
+  trackAnalysisComplete,
+  trackAnalysisFailure,
+  trackPartialSuccess,
+  trackQueuedForRetry,
+  getCircuitBreakerStatus as getTrackerCircuitStatus,
+  resetCircuitBreaker as resetTrackerCircuit
+} from "./services/safeOperationTracker";
 
 // Zod schemas
 const tierSchema = z.enum(["standard", "medium", "full"]);
@@ -1468,6 +1480,9 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
   // Log analysis start
   logAnalysisStart(sessionId, tier, problemStatement);
   
+  // Track analysis start in Operations Center (fire-and-forget, never blocks)
+  trackAnalysisStart(sessionId, tier, "user");
+  
   // Check circuit breaker state before starting
   const circuitState = perplexityCircuitBreaker.getState();
   if (circuitState === CircuitState.OPEN) {
@@ -1484,6 +1499,9 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
       createdAt: new Date(),
       lastError: 'Circuit breaker open - API temporarily unavailable',
     });
+    
+    // Track queued for retry (fire-and-forget)
+    trackQueuedForRetry(sessionId, 'Circuit breaker open - API temporarily unavailable');
     
     // Notify user about delay (circuit breaker open)
     if (email) {
@@ -1509,6 +1527,14 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
           console.log(`[Analysis] Part ${partNum} complete for session ${sessionId}`);
           logPartComplete(sessionId, partNum, totalParts);
           
+          // Track part start for next part (fire-and-forget)
+          if (partNum < totalParts) {
+            trackPartStart(sessionId, partNum + 1);
+          }
+          
+          // Track successful part completion (fire-and-forget)
+          trackPartComplete(sessionId, partNum, content, Date.now() - startTime);
+          
           // Track successful part
           partialResultsManager?.markPartComplete(partNum, content);
           
@@ -1530,6 +1556,9 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
           const duration = Date.now() - startTime;
           logAnalysisComplete(sessionId, tier, duration, true);
           recordMetric(sessionId, tier, 'success', duration);
+          
+          // Track analysis completion (fire-and-forget)
+          trackAnalysisComplete(sessionId, duration);
           
           console.log(`[Analysis] 6-part Syndicate analysis complete for session ${sessionId} in ${duration}ms`);
           
@@ -1572,10 +1601,17 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
               // Log partial success
               console.log(`[Analysis] Partial success: ${completedParts.length}/${totalParts} parts completed for session ${sessionId}`);
               
+              // Track partial success (fire-and-forget)
+              trackPartialSuccess(sessionId, completedParts.length, totalParts);
+              
               logAnalysisComplete(sessionId, tier, Date.now() - startTime, false, completionPercentage);
               return;
             }
           }
+          
+          // Track failure before adding to retry queue (fire-and-forget)
+          const failedPartSyndicate = partialResultsManager ? partialResultsManager.getCompletedParts().length + 1 : 1;
+          trackAnalysisFailure(sessionId, error instanceof Error ? error : new Error(String(error)), failedPartSyndicate);
           
           // Full failure - add to retry queue
           await handleAnalysisFailure(sessionId, tier, problemStatement, email, error, startTime);
@@ -1592,6 +1628,14 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
         onPartComplete: async (partNum, content) => {
           console.log(`[Analysis] Insider Part ${partNum} complete for session ${sessionId}`);
           logPartComplete(sessionId, partNum, totalParts);
+          
+          // Track part start for next part (fire-and-forget)
+          if (partNum < totalParts) {
+            trackPartStart(sessionId, partNum + 1);
+          }
+          
+          // Track successful part completion (fire-and-forget)
+          trackPartComplete(sessionId, partNum, content, Date.now() - startTime);
           
           partialResultsManager?.markPartComplete(partNum, content);
           
@@ -1610,6 +1654,9 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
           const duration = Date.now() - startTime;
           logAnalysisComplete(sessionId, tier, duration, true);
           recordMetric(sessionId, tier, 'success', duration);
+          
+          // Track analysis completion (fire-and-forget)
+          trackAnalysisComplete(sessionId, duration);
           
           console.log(`[Analysis] 2-part Insider analysis complete for session ${sessionId} in ${duration}ms`);
           
@@ -1651,10 +1698,17 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
               // Log partial success
               console.log(`[Analysis] Partial success: ${completedParts.length}/${totalParts} parts completed for session ${sessionId}`);
               
+              // Track partial success (fire-and-forget)
+              trackPartialSuccess(sessionId, completedParts.length, totalParts);
+              
               logAnalysisComplete(sessionId, tier, Date.now() - startTime, false, completionPercentage);
               return;
             }
           }
+          
+          // Track failure before adding to retry queue (fire-and-forget)
+          const failedPartInsider = partialResultsManager ? partialResultsManager.getCompletedParts().length + 1 : 1;
+          trackAnalysisFailure(sessionId, error instanceof Error ? error : new Error(String(error)), failedPartInsider);
           
           await handleAnalysisFailure(sessionId, tier, problemStatement, email, error, startTime);
         },
@@ -1686,6 +1740,10 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
       logAnalysisComplete(sessionId, tier, duration, true);
       recordMetric(sessionId, tier, 'success', duration);
       
+      // Track analysis completion (fire-and-forget) - Observer is single part
+      trackPartComplete(sessionId, 1, result.content, duration);
+      trackAnalysisComplete(sessionId, duration);
+      
       console.log(`[Analysis] Observer analysis complete for session ${sessionId} in ${duration}ms`);
       
       // Send email notification
@@ -1702,6 +1760,9 @@ async function startAnalysisInBackground(sessionId: string, problemStatement: st
       }
     }
   } catch (error) {
+    // Track failure in outer catch (fire-and-forget)
+    trackAnalysisFailure(sessionId, error instanceof Error ? error : new Error(String(error)), 1);
+    
     await handleAnalysisFailure(sessionId, tier, problemStatement, email, error, startTime);
   }
 }
