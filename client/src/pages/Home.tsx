@@ -365,8 +365,8 @@ export default function Home() {
 
           {/* Main Headline */}
           <div className="text-center mb-8">
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold tracking-tighter mb-6 leading-[0.9]">
-              <span className="block text-foreground">STOP GUESSING.</span>
+            <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-bold tracking-tight md:tracking-tighter mb-6 leading-tight md:leading-[0.9]">
+              <span className="block text-foreground mb-2 md:mb-0">STOP GUESSING.</span>
               <span className="block text-primary">VALIDATE STRATEGY.</span>
             </h1>
           </div>
