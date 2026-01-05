@@ -249,8 +249,9 @@ export default function Home() {
       <nav className="sticky top-6 z-40 mx-auto max-w-[95%] px-2 sm:px-4">
         <div className="border border-border bg-card/95 backdrop-blur-sm px-3 sm:px-5 py-2 sm:py-2.5 flex justify-between items-center">
           <a href="/" className="flex items-center gap-2 hover:opacity-80 transition flex-shrink-0">
-            <img src="/favicon.png" alt="VS" className="w-6 h-6 object-contain" />
-            <span className="font-bold text-[10px] sm:text-sm tracking-tight font-mono">VS<span className="text-primary hidden xs:inline">TRATEGY</span></span>
+            <img src="/favicon.png" alt="VS" className="w-6 h-6 object-contain md:hidden" />
+            <span className="font-bold text-[10px] sm:text-sm tracking-tight font-mono md:hidden">VS<span className="text-primary hidden xs:inline">TRATEGY</span></span>
+            <span className="hidden md:block font-bold text-base tracking-tight">Validate<span className="text-primary">Strategy</span></span>
           </a>
 
           <div className="flex items-center gap-1.5 sm:gap-3 flex-wrap justify-end">
