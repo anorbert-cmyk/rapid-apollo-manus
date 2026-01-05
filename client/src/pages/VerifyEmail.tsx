@@ -44,8 +44,8 @@ export default function VerifyEmail() {
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-primary/10 flex items-center justify-center">
                 <Loader2 className="h-8 w-8 animate-spin text-primary" />
               </div>
-              <CardTitle className="text-xl mb-2">Verifying your email...</CardTitle>
-              <CardDescription>Please wait while we confirm your email address.</CardDescription>
+              <h1 className="text-xl font-semibold mb-2">Verifying your email...</h1>
+              <h2 className="text-sm text-muted-foreground">Please wait while we confirm your email address.</h2>
             </CardContent>
           </Card>
         )}
@@ -56,7 +56,7 @@ export default function VerifyEmail() {
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-green-500/10 flex items-center justify-center">
                 <CheckCircle2 className="h-8 w-8 text-green-500" />
               </div>
-              <CardTitle className="text-xl mb-2 text-green-400">Email Verified!</CardTitle>
+              <h1 className="text-xl font-semibold mb-2 text-green-400">Email Verified!</h1>
               <CardDescription className="mb-6">
                 {email ? (
                   <>Your email <span className="text-foreground font-medium">{email}</span> has been verified.</>
@@ -98,7 +98,7 @@ export default function VerifyEmail() {
               <div className="w-16 h-16 mx-auto mb-6 rounded-full bg-red-500/10 flex items-center justify-center">
                 <XCircle className="h-8 w-8 text-red-500" />
               </div>
-              <CardTitle className="text-xl mb-2 text-red-400">Verification Failed</CardTitle>
+              <h1 className="text-xl font-semibold mb-2 text-red-400">Verification Failed</h1>
               <CardDescription className="mb-6">
                 This verification link is invalid or has expired. Please try subscribing again.
               </CardDescription>

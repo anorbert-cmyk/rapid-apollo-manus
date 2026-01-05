@@ -1197,3 +1197,13 @@
 - [x] Remove references to DPO
 - [x] Create blue version of VS logo for footer
 - [x] Update navigation and footer with VS logos
+
+
+## Admin Dashboard UX - January 5, 2026
+- [ ] Implement resizable columns for tables
+- [ ] UX audit and improvements
+- [ ] Loading states and skeletons
+- [ ] Empty states
+- [ ] Error handling
+- [ ] Responsive design check
+- [ ] Accessibility improvements

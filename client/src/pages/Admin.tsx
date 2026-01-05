@@ -13,6 +13,14 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import {
+  ResizableTable,
+  ResizableTableBody,
+  ResizableTableCell,
+  ResizableTableHead,
+  ResizableTableHeader,
+  ResizableTableRow,
+} from "@/components/ui/resizable-table";
 import { toast } from "sonner";
 import { 
   Wallet, 
@@ -920,48 +928,48 @@ export default function Admin() {
 
             {/* Operations Table */}
             <div className="rounded-md border">
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Operation ID</TableHead>
-                    <TableHead>Session</TableHead>
-                    <TableHead>Tier</TableHead>
-                    <TableHead>State</TableHead>
-                    <TableHead>Progress</TableHead>
-                    <TableHead>Started</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
+              <ResizableTable>
+                <ResizableTableHeader>
+                  <ResizableTableRow>
+                    <ResizableTableHead minWidth={100} maxWidth={200}>Operation ID</ResizableTableHead>
+                    <ResizableTableHead minWidth={100} maxWidth={200}>Session</ResizableTableHead>
+                    <ResizableTableHead minWidth={80} maxWidth={150}>Tier</ResizableTableHead>
+                    <ResizableTableHead minWidth={100} maxWidth={200}>State</ResizableTableHead>
+                    <ResizableTableHead minWidth={100} maxWidth={200}>Progress</ResizableTableHead>
+                    <ResizableTableHead minWidth={120} maxWidth={250}>Started</ResizableTableHead>
+                    <ResizableTableHead minWidth={100} maxWidth={200} resizable={false}>Actions</ResizableTableHead>
+                  </ResizableTableRow>
+                </ResizableTableHeader>
+                <ResizableTableBody>
                   {operationsLoading ? (
                     [...Array(5)].map((_, i) => (
-                      <TableRow key={i}>
+                      <ResizableTableRow key={i}>
                         {[...Array(7)].map((_, j) => (
-                          <TableCell key={j}><Skeleton className="h-4 w-full" /></TableCell>
+                          <ResizableTableCell key={j}><Skeleton className="h-4 w-full" /></ResizableTableCell>
                         ))}
-                      </TableRow>
+                      </ResizableTableRow>
                     ))
                   ) : operationsData?.operations?.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center text-muted-foreground py-8">
+                    <ResizableTableRow>
+                      <ResizableTableCell colSpan={7} className="text-center text-muted-foreground py-8">
                         No operations found
-                      </TableCell>
-                    </TableRow>
+                      </ResizableTableCell>
+                    </ResizableTableRow>
                   ) : (
                     operationsData?.operations?.map((op: any) => (
-                      <TableRow key={op.operationId} className="cursor-pointer hover:bg-muted/50" onClick={() => setSelectedOperationId(op.operationId)}>
-                        <TableCell className="font-mono text-xs">
+                      <ResizableTableRow key={op.operationId} className="cursor-pointer hover:bg-muted/50" onClick={() => setSelectedOperationId(op.operationId)}>
+                        <ResizableTableCell className="font-mono text-xs">
                           {op.operationId?.slice(0, 8)}...
-                        </TableCell>
-                        <TableCell className="font-mono text-xs">
+                        </ResizableTableCell>
+                        <ResizableTableCell className="font-mono text-xs">
                           {op.sessionId?.slice(0, 8)}...
-                        </TableCell>
-                        <TableCell>
+                        </ResizableTableCell>
+                        <ResizableTableCell>
                           <Badge variant={op.tier === 'full' ? 'default' : op.tier === 'medium' ? 'secondary' : 'outline'}>
                             {op.tierLabel}
                           </Badge>
-                        </TableCell>
-                        <TableCell>
+                        </ResizableTableCell>
+                        <ResizableTableCell>
                           <Badge variant={
                             op.state === 'completed' ? 'default' :
                             op.state === 'failed' ? 'destructive' :
@@ -974,8 +982,8 @@ export default function Admin() {
                           }>
                             {op.state === 'part_completed' ? `Part ${op.completedParts}/${op.totalParts}` : op.state}
                           </Badge>
-                        </TableCell>
-                        <TableCell>
+                        </ResizableTableCell>
+                        <ResizableTableCell>
                           <div className="flex items-center gap-2">
                             <div className="w-16 h-2 bg-muted rounded-full overflow-hidden">
                               <div 
@@ -989,11 +997,11 @@ export default function Admin() {
                             </div>
                             <span className="text-xs text-muted-foreground">{op.progressPercent}%</span>
                           </div>
-                        </TableCell>
-                        <TableCell className="text-xs text-muted-foreground">
+                        </ResizableTableCell>
+                        <ResizableTableCell className="text-xs text-muted-foreground">
                           {op.startedAt ? new Date(op.startedAt).toLocaleString() : '—'}
-                        </TableCell>
-                        <TableCell>
+                        </ResizableTableCell>
+                        <ResizableTableCell>
                           <div className="flex items-center gap-1">
                             {(op.state === 'generating' || op.state === 'part_completed') && (
                               <Button
@@ -1049,12 +1057,12 @@ export default function Admin() {
                               </Button>
                             )}
                           </div>
-                        </TableCell>
-                      </TableRow>
+                        </ResizableTableCell>
+                      </ResizableTableRow>
                     ))
                   )}
-                </TableBody>
-              </Table>
+                </ResizableTableBody>
+              </ResizableTable>
             </div>
 
             {/* Pagination Controls */}

@@ -104,9 +104,9 @@ export default function History() {
               <HistoryIcon className="h-6 w-6 text-primary" />
               Analysis History
             </h1>
-            <p className="text-sm text-muted-foreground mt-1">
+            <h2 className="text-sm text-muted-foreground mt-1">
               View and manage your past analyses
-            </p>
+            </h2>
           </div>
           
           <Button 

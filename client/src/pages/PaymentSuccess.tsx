@@ -138,9 +138,9 @@ export default function PaymentSuccess() {
           </div>
           
           <h1 className="text-3xl font-bold mb-2">Payment Successful!</h1>
-          <p className="text-muted-foreground">
+          <h2 className="text-muted-foreground">
             Thank you for your purchase. Your analysis is being prepared.
-          </p>
+          </h2>
         </div>
 
         {/* Order Summary Card */}
