@@ -520,7 +520,7 @@ export default function Admin() {
               <Wallet className="h-3 w-3 mr-1" />
               {walletAddress?.slice(0, 6)}...{walletAddress?.slice(-4)}
             </Badge>
-            <Button variant="ghost" size="sm" onClick={() => { refetchStats(); refetchTx(); refetchEmails(); }}>
+            <Button variant="ghost" size="sm" onClick={() => { refetchStats(); refetchTx(); refetchEmails(); }} aria-label="Refresh data">
               <RefreshCw className="h-4 w-4" />
             </Button>
           </div>
@@ -2149,7 +2149,7 @@ export default function Admin() {
                   <option value="warn">Warnings</option>
                   <option value="info">Info</option>
                 </select>
-                <Button variant="outline" size="sm" onClick={() => refetchLogs()}>
+                <Button variant="outline" size="sm" onClick={() => refetchLogs()} aria-label="Refresh logs">
                   <RefreshCw className="h-4 w-4" />
                 </Button>
               </div>

@@ -1056,3 +1056,27 @@
 - [x] Add SoftwareApplication schema for better app store visibility
 - [x] Enhanced Organization schema with logo and contact
 - [x] Demo Analysis page already has proper SEO through main index.html
+
+
+## PageSpeed Optimization - January 5, 2026 (Target: 67 → 90+)
+
+### Phase 1: Critical Rendering Path (Est. +10-15 points)
+- [x] Add preconnect hints for external origins (fonts.googleapis.com, fonts.gstatic.com)
+- [x] Add dns-prefetch for api.manus.im and manuscdn.com
+- [ ] Identify and inline critical CSS for above-the-fold content (optional - complex)
+- [ ] Implement async CSS loading for non-critical styles (optional - complex)
+
+### Phase 2: JavaScript Optimization (Est. +15-20 points)
+- [x] Configure Vite manual chunks for vendor splitting
+- [x] Separate React, Recharts, and UI library bundles (vendor-react, vendor-charts, vendor-ui, vendor-utils)
+- [x] Dynamic imports already implemented via React.lazy()
+- [x] Tree shaking enabled by default in Vite production build
+
+### Phase 3: Accessibility Fixes (Est. +5 points)
+- [x] Add aria-label to icon-only buttons (Refresh data, Refresh logs)
+- [x] Fix contrast ratio issues in muted text (increased oklch lightness)
+- [ ] Verify focus states on all interactive elements (manual check needed)
+
+
+### Source Maps
+- [x] Enable source maps in production build for debugging (vite.config.ts sourcemap: true)

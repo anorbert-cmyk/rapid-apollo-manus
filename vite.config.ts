@@ -24,6 +24,27 @@ export default defineConfig({
   build: {
     outDir: path.resolve(import.meta.dirname, "dist/public"),
     emptyOutDir: true,
+    sourcemap: true, // Enable source maps for debugging
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Vendor splitting for better caching and parallel loading
+          'vendor-react': ['react', 'react-dom', 'wouter'],
+          'vendor-charts': ['recharts'],
+          'vendor-ui': [
+            '@radix-ui/react-dialog',
+            '@radix-ui/react-tabs',
+            '@radix-ui/react-select',
+            '@radix-ui/react-dropdown-menu',
+            '@radix-ui/react-tooltip',
+            '@radix-ui/react-slot',
+          ],
+          'vendor-utils': ['clsx', 'tailwind-merge', 'class-variance-authority'],
+        },
+      },
+    },
+    // Optimize chunk size
+    chunkSizeWarningLimit: 500,
   },
   server: {
     host: true,
