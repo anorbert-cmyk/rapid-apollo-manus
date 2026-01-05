@@ -1189,3 +1189,11 @@
 - [x] Replace Streamdown with CSP-compliant react-markdown
 - [x] Fix nested anchor tags in Terms and Privacy pages
 - [x] Add VS logo to footer
+
+
+## Legal Pages Update - January 5, 2026
+- [x] Update Privacy Policy - only email storage, no DPO, encrypted data
+- [x] Update Terms of Service - align with FAQ
+- [x] Remove references to DPO
+- [x] Create blue version of VS logo for footer
+- [x] Update navigation and footer with VS logos

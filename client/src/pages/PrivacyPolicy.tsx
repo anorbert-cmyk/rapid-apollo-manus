@@ -23,208 +23,160 @@ export default function PrivacyPolicy() {
           <section>
             <h2 className="text-2xl font-semibold mb-4">1. Introduction</h2>
             <p className="text-muted-foreground leading-relaxed">
-              ValidateStrategy ("Company," "we," "us," or "our") respects your privacy and is committed to protecting 
-              your personal data. This Privacy Policy explains how we collect, use, disclose, and safeguard your 
-              information when you use our AI-powered strategic analysis service ("Service").
+              ValidateStrategy ("Company," "we," "us," or "our") is committed to protecting your privacy. This Privacy 
+              Policy explains our minimal data collection practices when you use our AI-powered strategic analysis 
+              service ("Service"). We believe in data minimization—we only collect what is absolutely necessary to 
+              deliver our Service.
             </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">2. What We Collect</h2>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              We practice strict data minimization. The only personal information we collect is:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
+              <li>
+                <strong className="text-foreground">Email Address (Optional):</strong> Only if you choose to provide it 
+                for receiving notifications when your analysis is complete, transaction status updates for cryptocurrency 
+                payments, or invoices after card payments.
+              </li>
+            </ul>
             <p className="text-muted-foreground leading-relaxed mt-4">
-              By using our Service, you consent to the data practices described in this Privacy Policy. If you do not 
-              agree with the terms of this Privacy Policy, please do not access or use the Service.
+              <strong className="text-foreground">We do NOT collect:</strong> Names, addresses, phone numbers, social 
+              media profiles, browsing history, location data, or any other personally identifiable information. We do 
+              not use tracking cookies for advertising purposes.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">2. Information We Collect</h2>
-            
-            <h3 className="text-xl font-medium mb-3 mt-6 text-foreground">2.1 Information You Provide</h3>
-            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li><strong className="text-foreground">Account Information:</strong> Email address, name, and authentication credentials when you create an account</li>
-              <li><strong className="text-foreground">Business Information:</strong> Business ideas, strategies, market data, and other information you submit for analysis</li>
-              <li><strong className="text-foreground">Payment Information:</strong> Payment details processed through our third-party payment processors (Stripe, cryptocurrency payment providers)</li>
-              <li><strong className="text-foreground">Communications:</strong> Any correspondence you send to us, including support requests</li>
-            </ul>
-
-            <h3 className="text-xl font-medium mb-3 mt-6 text-foreground">2.2 Information Collected Automatically</h3>
-            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li><strong className="text-foreground">Device Information:</strong> Browser type, operating system, device identifiers</li>
-              <li><strong className="text-foreground">Usage Data:</strong> Pages visited, features used, time spent on the Service</li>
-              <li><strong className="text-foreground">Log Data:</strong> IP address, access times, referring URLs</li>
-              <li><strong className="text-foreground">Cookies and Tracking Technologies:</strong> Session cookies, analytics cookies, and similar technologies</li>
-            </ul>
+            <h2 className="text-2xl font-semibold mb-4">3. Your Business Ideas & IP Protection</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Your ideas are processed in an <strong className="text-foreground">ephemeral, encrypted environment</strong>. 
+              We are not a VC firm—we don't pick winners, we build them. Your intellectual property remains 100% yours, 
+              analyzed by machines, not humans. Business ideas and strategies you submit are processed solely to generate 
+              your analysis and are not stored permanently or used for any other purpose.
+            </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">3. How We Use Your Information</h2>
+            <h2 className="text-2xl font-semibold mb-4">4. How We Use Your Email</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              We use the information we collect for the following purposes:
+              If you provide your email address, we use it exclusively for:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li><strong className="text-foreground">Service Delivery:</strong> To provide, maintain, and improve our AI-powered analysis services</li>
-              <li><strong className="text-foreground">Account Management:</strong> To create and manage your account, process transactions, and send service-related communications</li>
-              <li><strong className="text-foreground">AI Processing:</strong> To process your business information through our AI systems to generate strategic analyses</li>
-              <li><strong className="text-foreground">Customer Support:</strong> To respond to your inquiries and provide technical support</li>
-              <li><strong className="text-foreground">Analytics:</strong> To analyze usage patterns and improve our Service</li>
-              <li><strong className="text-foreground">Security:</strong> To detect, prevent, and address technical issues and fraudulent activity</li>
-              <li><strong className="text-foreground">Legal Compliance:</strong> To comply with applicable laws, regulations, and legal processes</li>
+              <li>Notifying you when your strategic analysis is complete and ready for download</li>
+              <li>Sending transaction status updates for cryptocurrency payments</li>
+              <li>Delivering invoices after successful card payments</li>
             </ul>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">4. Data Sharing and Disclosure</h2>
-            <p className="text-muted-foreground leading-relaxed mb-4">
-              We do not sell your personal information. We may share your information in the following circumstances:
+            <p className="text-muted-foreground leading-relaxed mt-4">
+              We will never sell, rent, or share your email address with third parties for marketing purposes. We do 
+              not send promotional emails or newsletters unless you explicitly opt in.
             </p>
-            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li><strong className="text-foreground">Service Providers:</strong> With third-party vendors who assist in operating our Service (payment processors, cloud hosting, analytics providers)</li>
-              <li><strong className="text-foreground">AI Processing:</strong> With AI service providers to generate analyses (data is processed according to strict confidentiality agreements)</li>
-              <li><strong className="text-foreground">Legal Requirements:</strong> When required by law, court order, or governmental authority</li>
-              <li><strong className="text-foreground">Business Transfers:</strong> In connection with a merger, acquisition, or sale of assets</li>
-              <li><strong className="text-foreground">Protection of Rights:</strong> To protect our rights, privacy, safety, or property, or that of our users or others</li>
-            </ul>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold mb-4">5. Data Security</h2>
             <p className="text-muted-foreground leading-relaxed">
-              We implement appropriate technical and organizational security measures to protect your personal data 
-              against unauthorized access, alteration, disclosure, or destruction. These measures include:
-            </p>
-            <ul className="list-disc pl-6 mt-4 space-y-2 text-muted-foreground">
-              <li>Encryption of data in transit (TLS/SSL) and at rest</li>
-              <li>Secure authentication mechanisms</li>
-              <li>Regular security assessments and updates</li>
-              <li>Access controls limiting data access to authorized personnel</li>
-            </ul>
-            <p className="text-muted-foreground leading-relaxed mt-4">
-              However, no method of transmission over the Internet or electronic storage is 100% secure. While we 
-              strive to protect your personal data, we cannot guarantee its absolute security.
+              All data is encrypted both in transit (using TLS/SSL) and at rest. We implement industry-standard security 
+              measures to protect against unauthorized access, alteration, disclosure, or destruction of data. Our 
+              infrastructure is designed with security as a priority.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">6. Data Retention</h2>
+            <h2 className="text-2xl font-semibold mb-4">6. Payment Processing</h2>
             <p className="text-muted-foreground leading-relaxed">
-              We retain your personal data only for as long as necessary to fulfill the purposes for which it was 
-              collected, including to satisfy legal, accounting, or reporting requirements. The retention period 
-              may vary depending on the context and our legal obligations.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-4">
-              Analysis results and associated business information are retained for a period of 12 months from the 
-              date of generation, after which they may be automatically deleted unless you request earlier deletion 
-              or extended retention.
+              We do not store credit card numbers or payment credentials. All payment processing is handled by 
+              third-party payment processors (Stripe for card payments, NOWPayments for cryptocurrency). These 
+              processors have their own privacy policies and security measures. We only receive confirmation of 
+              successful transactions.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">7. Your Rights and Choices</h2>
+            <h2 className="text-2xl font-semibold mb-4">7. Cookies</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              We use only essential cookies required for the Service to function properly (such as session management). 
+              We do not use advertising cookies, tracking pixels, or third-party analytics that collect personal data. 
+              Basic, anonymized usage analytics may be collected to improve service performance.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">8. Third-Party Services</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              Depending on your location, you may have the following rights regarding your personal data:
+              We use the following third-party services:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li><strong className="text-foreground">Access:</strong> Request access to your personal data</li>
-              <li><strong className="text-foreground">Correction:</strong> Request correction of inaccurate or incomplete data</li>
-              <li><strong className="text-foreground">Deletion:</strong> Request deletion of your personal data (subject to legal retention requirements)</li>
-              <li><strong className="text-foreground">Portability:</strong> Request a copy of your data in a portable format</li>
-              <li><strong className="text-foreground">Objection:</strong> Object to certain processing of your data</li>
-              <li><strong className="text-foreground">Withdrawal of Consent:</strong> Withdraw consent where processing is based on consent</li>
+              <li><strong className="text-foreground">Stripe:</strong> For processing card payments (PCI-DSS compliant)</li>
+              <li><strong className="text-foreground">NOWPayments:</strong> For processing cryptocurrency payments</li>
+              <li><strong className="text-foreground">AI Processing:</strong> For generating strategic analyses (data processed under strict confidentiality)</li>
             </ul>
             <p className="text-muted-foreground leading-relaxed mt-4">
-              To exercise these rights, please contact us at privacy@validatestrategy.com. We will respond to your 
-              request within 30 days.
+              These services process data according to their own privacy policies and are selected for their strong 
+              security and privacy practices.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">8. Cookies and Tracking Technologies</h2>
+            <h2 className="text-2xl font-semibold mb-4">9. Data Retention</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              Email addresses are retained only as long as necessary to provide the Service. Analysis results are 
+              available for download for a limited period, after which they may be automatically deleted. You may 
+              request deletion of your email address at any time by contacting us.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">10. Your Rights</h2>
             <p className="text-muted-foreground leading-relaxed mb-4">
-              We use cookies and similar tracking technologies to collect and track information about your use of 
-              our Service. Types of cookies we use include:
+              You have the right to:
             </p>
             <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
-              <li><strong className="text-foreground">Essential Cookies:</strong> Required for the Service to function properly</li>
-              <li><strong className="text-foreground">Analytics Cookies:</strong> Help us understand how users interact with our Service</li>
-              <li><strong className="text-foreground">Preference Cookies:</strong> Remember your settings and preferences</li>
+              <li>Request access to any email address we have stored for you</li>
+              <li>Request deletion of your email address from our systems</li>
+              <li>Opt out of receiving any email communications</li>
             </ul>
             <p className="text-muted-foreground leading-relaxed mt-4">
-              You can control cookies through your browser settings. However, disabling certain cookies may affect 
-              the functionality of our Service.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">9. Third-Party Services</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Our Service may contain links to third-party websites or integrate with third-party services. We are 
-              not responsible for the privacy practices of these third parties. We encourage you to review the 
-              privacy policies of any third-party services you access through our Service.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-4">
-              Third-party services we use include:
-            </p>
-            <ul className="list-disc pl-6 mt-4 space-y-2 text-muted-foreground">
-              <li>Stripe (payment processing)</li>
-              <li>Cryptocurrency payment processors</li>
-              <li>Cloud hosting providers</li>
-              <li>AI service providers</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">10. International Data Transfers</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              Your information may be transferred to and processed in countries other than your country of residence. 
-              These countries may have data protection laws that are different from the laws of your country. We take 
-              appropriate safeguards to ensure that your personal data remains protected in accordance with this 
-              Privacy Policy.
+              To exercise these rights, contact us at privacy@validatestrategy.com.
             </p>
           </section>
 
           <section>
             <h2 className="text-2xl font-semibold mb-4">11. Children's Privacy</h2>
             <p className="text-muted-foreground leading-relaxed">
-              Our Service is not intended for individuals under the age of 18. We do not knowingly collect personal 
-              data from children. If you are a parent or guardian and believe your child has provided us with personal 
-              data, please contact us immediately.
+              Our Service is not intended for individuals under the age of 18. We do not knowingly collect any 
+              information from children.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">12. California Privacy Rights (CCPA)</h2>
+            <h2 className="text-2xl font-semibold mb-4">12. International Users</h2>
             <p className="text-muted-foreground leading-relaxed">
-              If you are a California resident, you have specific rights under the California Consumer Privacy Act 
-              (CCPA), including the right to know what personal information we collect, the right to delete your 
-              personal information, and the right to opt-out of the sale of your personal information. We do not 
-              sell personal information.
+              Our Service is available globally. By using the Service, you consent to the transfer of your email 
+              address (if provided) to servers that may be located outside your country of residence. All transfers 
+              are protected by encryption.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">13. European Privacy Rights (GDPR)</h2>
+            <h2 className="text-2xl font-semibold mb-4">13. Changes to This Policy</h2>
             <p className="text-muted-foreground leading-relaxed">
-              If you are located in the European Economic Area (EEA), you have certain rights under the General Data 
-              Protection Regulation (GDPR). Our legal basis for processing your personal data depends on the specific 
-              context, including performance of a contract, legitimate interests, and consent.
+              We may update this Privacy Policy from time to time. Any changes will be posted on this page with an 
+              updated "Last Updated" date. Continued use of the Service after changes constitutes acceptance of the 
+              updated policy.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">14. Changes to This Privacy Policy</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              We may update this Privacy Policy from time to time. We will notify you of any material changes by 
-              posting the new Privacy Policy on this page and updating the "Last Updated" date. We encourage you 
-              to review this Privacy Policy periodically.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">15. Contact Us</h2>
+            <h2 className="text-2xl font-semibold mb-4">14. Contact Us</h2>
             <p className="text-muted-foreground leading-relaxed">
               If you have any questions about this Privacy Policy or our data practices, please contact us at:
             </p>
-            <div className="mt-4 text-muted-foreground">
-              <p><strong className="text-foreground">Email:</strong> privacy@validatestrategy.com</p>
-              <p className="mt-2"><strong className="text-foreground">Data Protection Officer:</strong> dpo@validatestrategy.com</p>
-            </div>
+            <p className="text-muted-foreground mt-4">
+              <strong className="text-foreground">Email:</strong> privacy@validatestrategy.com
+            </p>
           </section>
         </div>
 

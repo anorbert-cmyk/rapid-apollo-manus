@@ -30,144 +30,134 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">2. Description of Service</h2>
+            <h2 className="text-2xl font-semibold mb-4">2. Service Description</h2>
             <p className="text-muted-foreground leading-relaxed">
-              ValidateStrategy provides AI-powered strategic analysis and product validation services. Our Service uses 
-              artificial intelligence to analyze business ideas, market opportunities, and strategic decisions. The 
-              analyses provided are for informational and educational purposes only.
+              ValidateStrategy is an AI-powered strategic analysis service. We run your problem statement through a 
+              4-phase adversarial stress-test: (1) Discovery & Problem Anatomy, (2) Strategic Design & Roadmap, 
+              (3) AI Toolkit & Prompts, and (4) Risk Assessment & ROI. The output is a tactical markdown report 
+              including Executive Summary, Market Math, Competitor Analysis, Tech Stack recommendations, 
+              Production-Ready Prompts, and a Risk Matrix.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">3. No Guarantee of Results</h2>
+            <h2 className="text-2xl font-semibold mb-4">3. Intellectual Property Protection</h2>
             <p className="text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">THE SERVICE IS PROVIDED "AS IS" WITHOUT ANY WARRANTIES OF ANY KIND.</strong> We make no 
-              representations or warranties regarding the accuracy, completeness, reliability, or suitability of any 
-              analysis or information provided through the Service. Any reliance you place on such information is 
-              strictly at your own risk.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-4">
-              We do not guarantee that following our analyses or recommendations will result in business success, 
-              profitability, or any specific outcome. Business decisions involve inherent risks, and past performance 
-              or AI-generated insights do not guarantee future results.
+              <strong className="text-foreground">Your ideas remain 100% yours.</strong> All business ideas, strategies, 
+              and information you submit are processed in an ephemeral, encrypted environment. Your intellectual property 
+              is analyzed by machines, not humans. We are not a VC firm—we don't pick winners, we build them. We do not 
+              claim any ownership rights over your submitted content or the ideas contained therein.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">4. Limitation of Liability</h2>
+            <h2 className="text-2xl font-semibold mb-4">4. Service Tiers</h2>
             <p className="text-muted-foreground leading-relaxed">
-              <strong className="text-foreground">TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW:</strong>
+              We offer multiple service tiers, each triggering a different depth of cognitive processing. Higher tiers 
+              use more expensive, deeper reasoning chains (such as APEX processing). The tier you select determines the 
+              comprehensiveness and depth of your analysis. Tier selection is final at the time of purchase and cannot 
+              be changed after processing begins.
             </p>
-            <ul className="list-disc pl-6 mt-4 space-y-2 text-muted-foreground">
-              <li>
-                In no event shall ValidateStrategy, its directors, employees, partners, agents, suppliers, or affiliates 
-                be liable for any indirect, incidental, special, consequential, or punitive damages, including without 
-                limitation, loss of profits, data, use, goodwill, or other intangible losses.
-              </li>
-              <li>
-                Our total liability for any claims arising from or related to the Service shall not exceed the amount 
-                you paid to us in the twelve (12) months preceding the claim.
-              </li>
-              <li>
-                We shall not be liable for any damages, losses, or costs arising from your business decisions, 
-                investments, or actions taken based on our analyses or recommendations.
-              </li>
-              <li>
-                We are not responsible for any third-party actions, products, or services mentioned in our analyses.
-              </li>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">5. Payment Terms</h2>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              We accept payment via credit/debit cards (processed by Stripe) and cryptocurrency (processed by NOWPayments). 
+              All prices are displayed in USD unless otherwise specified. Payment is required before analysis processing begins.
+            </p>
+            <p className="text-muted-foreground leading-relaxed">
+              <strong className="text-foreground">Cryptocurrency Payments:</strong> For crypto payments, you may optionally 
+              provide an email address to receive transaction status updates. Crypto transactions are subject to network 
+              confirmation times and fees determined by the respective blockchain networks.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">6. Refund Policy</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              <strong className="text-foreground">All sales are final.</strong> Since we burn significant GPU compute 
+              resources to generate your unique strategy instantly, refunds are not available. We provide a full Demo 
+              Analysis on our website so you can see exactly what the output looks like before purchasing. By completing 
+              a purchase, you acknowledge that you have reviewed the demo and understand the nature of the deliverable.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">7. Disclaimer of Warranties</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              THE SERVICE IS PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF ANY KIND, EITHER EXPRESS OR IMPLIED. 
+              We do not guarantee that our analyses will result in business success, funding, or any particular outcome. 
+              Our reports are based on AI-generated patterns and data analysis—they are not a substitute for professional 
+              business, legal, or financial advice. The information provided is for informational purposes only.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">8. Limitation of Liability</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              TO THE MAXIMUM EXTENT PERMITTED BY LAW, VALIDATESTRATEGY SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL, 
+              SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES, INCLUDING BUT NOT LIMITED TO LOSS OF PROFITS, DATA, BUSINESS 
+              OPPORTUNITIES, OR GOODWILL, ARISING OUT OF OR RELATED TO YOUR USE OF THE SERVICE. Our total liability for 
+              any claims arising from your use of the Service shall not exceed the amount you paid for the specific 
+              analysis in question.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">9. Indemnification</h2>
+            <p className="text-muted-foreground leading-relaxed">
+              You agree to indemnify, defend, and hold harmless ValidateStrategy and its officers, directors, employees, 
+              and agents from any claims, damages, losses, liabilities, and expenses (including reasonable attorneys' fees) 
+              arising out of or related to your use of the Service, your violation of these Terms, or your violation of 
+              any rights of a third party.
+            </p>
+          </section>
+
+          <section>
+            <h2 className="text-2xl font-semibold mb-4">10. Acceptable Use</h2>
+            <p className="text-muted-foreground leading-relaxed mb-4">
+              You agree not to use the Service for:
+            </p>
+            <ul className="list-disc pl-6 space-y-2 text-muted-foreground">
+              <li>Any unlawful purpose or to promote illegal activities</li>
+              <li>Submitting content that infringes on intellectual property rights of others</li>
+              <li>Attempting to reverse engineer, decompile, or extract our AI models or algorithms</li>
+              <li>Automated scraping or bulk access without prior written consent</li>
+              <li>Any activity that could damage, disable, or impair the Service</li>
             </ul>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">5. Indemnification</h2>
+            <h2 className="text-2xl font-semibold mb-4">11. Service Availability</h2>
             <p className="text-muted-foreground leading-relaxed">
-              You agree to defend, indemnify, and hold harmless ValidateStrategy and its officers, directors, employees, 
-              contractors, agents, licensors, and suppliers from and against any claims, liabilities, damages, judgments, 
-              awards, losses, costs, expenses, or fees (including reasonable attorneys' fees) arising out of or relating 
-              to your violation of these Terms or your use of the Service.
+              We strive to maintain high availability but do not guarantee uninterrupted access to the Service. We reserve 
+              the right to modify, suspend, or discontinue the Service (or any part thereof) at any time with or without 
+              notice. We shall not be liable to you or any third party for any modification, suspension, or discontinuance 
+              of the Service.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">6. Intellectual Property</h2>
+            <h2 className="text-2xl font-semibold mb-4">12. Governing Law</h2>
             <p className="text-muted-foreground leading-relaxed">
-              All content, features, and functionality of the Service, including but not limited to text, graphics, 
-              logos, icons, images, audio clips, digital downloads, and software, are the exclusive property of 
-              ValidateStrategy or its licensors and are protected by copyright, trademark, and other intellectual 
-              property laws.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-4">
-              You may use the analyses provided to you for your personal or internal business purposes only. You may 
-              not redistribute, sell, or publicly share our analyses without prior written consent.
+              These Terms shall be governed by and construed in accordance with the laws of the jurisdiction in which 
+              ValidateStrategy operates, without regard to its conflict of law provisions. Any disputes arising under 
+              these Terms shall be resolved through binding arbitration in accordance with applicable arbitration rules.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">7. User Responsibilities</h2>
+            <h2 className="text-2xl font-semibold mb-4">13. Changes to Terms</h2>
             <p className="text-muted-foreground leading-relaxed">
-              You are solely responsible for:
-            </p>
-            <ul className="list-disc pl-6 mt-4 space-y-2 text-muted-foreground">
-              <li>The accuracy and completeness of information you provide to us</li>
-              <li>All business decisions you make based on our analyses</li>
-              <li>Compliance with all applicable laws and regulations in your jurisdiction</li>
-              <li>Seeking independent professional advice (legal, financial, business) before making significant decisions</li>
-              <li>Maintaining the confidentiality of your account credentials</li>
-            </ul>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">8. Payment and Refunds</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              All payments are processed securely through our third-party payment processors. By making a purchase, 
-              you agree to pay all fees and charges associated with your selected service tier.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-4">
-              <strong className="text-foreground">Refund Policy:</strong> Due to the nature of our AI-generated analysis services, 
-              all sales are final once the analysis has been initiated. We do not offer refunds for completed or 
-              in-progress analyses. If you experience technical issues preventing delivery, please contact us within 
-              48 hours of purchase.
+              We reserve the right to modify these Terms at any time. Changes will be effective immediately upon posting 
+              to this page with an updated "Last Updated" date. Your continued use of the Service after any changes 
+              constitutes acceptance of the new Terms.
             </p>
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">9. Service Availability</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              We do not guarantee that the Service will be available at all times or without interruption. We reserve 
-              the right to modify, suspend, or discontinue the Service (or any part thereof) at any time without notice. 
-              We shall not be liable to you or any third party for any modification, suspension, or discontinuation of 
-              the Service.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">10. Governing Law and Dispute Resolution</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              These Terms shall be governed by and construed in accordance with the laws of the State of Delaware, 
-              United States, without regard to its conflict of law provisions.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-4">
-              Any dispute arising from or relating to these Terms or the Service shall be resolved through binding 
-              arbitration in accordance with the rules of the American Arbitration Association. The arbitration shall 
-              take place in Delaware, and the arbitrator's decision shall be final and binding.
-            </p>
-            <p className="text-muted-foreground leading-relaxed mt-4">
-              <strong className="text-foreground">CLASS ACTION WAIVER:</strong> You agree that any dispute resolution proceedings 
-              will be conducted only on an individual basis and not in a class, consolidated, or representative action.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">11. Modifications to Terms</h2>
-            <p className="text-muted-foreground leading-relaxed">
-              We reserve the right to modify these Terms at any time. We will notify users of material changes by 
-              posting the updated Terms on our website with a new "Last Updated" date. Your continued use of the 
-              Service after such modifications constitutes your acceptance of the updated Terms.
-            </p>
-          </section>
-
-          <section>
-            <h2 className="text-2xl font-semibold mb-4">12. Severability</h2>
+            <h2 className="text-2xl font-semibold mb-4">14. Severability</h2>
             <p className="text-muted-foreground leading-relaxed">
               If any provision of these Terms is held to be invalid or unenforceable, such provision shall be struck 
               and the remaining provisions shall be enforced to the fullest extent under law.
@@ -175,7 +165,7 @@ export default function TermsOfService() {
           </section>
 
           <section>
-            <h2 className="text-2xl font-semibold mb-4">13. Contact Information</h2>
+            <h2 className="text-2xl font-semibold mb-4">15. Contact Information</h2>
             <p className="text-muted-foreground leading-relaxed">
               For questions about these Terms of Service, please contact us at:
             </p>
