@@ -42,7 +42,7 @@ import { createInvoice, isNowPaymentsConfigured, getPaymentStatus } from "./serv
 import { createOrder as createPayPalOrder, captureOrder as capturePayPalOrder, isPayPalConfigured } from "./services/paypalService";
 import { verifyAdminSignature, verifyAdminSignatureWithChallenge, checkAdminStatus, generateChallenge } from "./services/walletAuthService";
 import { sendValidateStrategyEmail, isEmailConfigured } from "./services/emailService";
-import { executeApexAnalysis, isPerplexityConfigured } from "./services/perplexityApiService";
+import { executeApexAnalysis, isApexEngineConfigured } from "./services/perplexityApiService";
 
 // Error handling imports
 import {
@@ -1507,7 +1507,7 @@ export const appRouter = router({
         // Coinbase replaced with NOWPayments
         coinbaseEnabled: false, // isCoinbaseConfigured(),
         paypalEnabled: isPayPalConfigured(),
-        perplexityEnabled: isPerplexityConfigured(),
+        apexEngineEnabled: isApexEngineConfigured(),
       };
     }),
   }),
@@ -1516,17 +1516,17 @@ export const appRouter = router({
   apex: router({
     // Check if APEX tier is available (Perplexity configured)
     isAvailable: publicProcedure.query(() => {
-      return { available: isPerplexityConfigured() };
+      return { available: isApexEngineConfigured() };
     }),
 
     // Start APEX analysis (requires completed payment for full tier)
     startAnalysis: publicProcedure
       .input(z.object({ sessionId: z.string() }))
       .mutation(async ({ input }) => {
-        if (!isPerplexityConfigured()) {
+        if (!isApexEngineConfigured()) {
           throw new TRPCError({
             code: "PRECONDITION_FAILED",
-            message: "APEX analysis is not available. Perplexity API key not configured."
+            message: "APEX analysis is not available. AI Engine not configured."
           });
         }
 

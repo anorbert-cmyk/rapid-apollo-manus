@@ -9,15 +9,15 @@ import { describe, it, expect } from "vitest";
 const PERPLEXITY_API_URL = "https://api.perplexity.ai/chat/completions";
 
 describe("Perplexity API Key Validation", () => {
-  const hasApiKey = !!process.env.PERPLEXITY_API_KEY;
+  const hasApiKey = !!process.env.APEX_ENGINE_API_KEY;
 
-  it.skipIf(!hasApiKey)("should have PERPLEXITY_API_KEY configured", () => {
-    expect(process.env.PERPLEXITY_API_KEY).toBeDefined();
-    expect(process.env.PERPLEXITY_API_KEY).not.toBe("");
+  it.skipIf(!hasApiKey)("should have APEX_ENGINE_API_KEY configured", () => {
+    expect(process.env.APEX_ENGINE_API_KEY).toBeDefined();
+    expect(process.env.APEX_ENGINE_API_KEY).not.toBe("");
   });
 
   it.skipIf(!hasApiKey)("should successfully authenticate with Perplexity API", async () => {
-    const apiKey = process.env.PERPLEXITY_API_KEY;
+    const apiKey = process.env.APEX_ENGINE_API_KEY;
 
     const response = await fetch(PERPLEXITY_API_URL, {
       method: "POST",

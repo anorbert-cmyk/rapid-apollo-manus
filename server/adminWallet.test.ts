@@ -1,7 +1,11 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, beforeEach } from "vitest";
 import { checkAdminStatus } from "./services/walletAuthService";
 
 describe("Admin Wallet Configuration", () => {
+  beforeEach(() => {
+    process.env.ADMIN_WALLET_ADDRESS = "0xa14504ffe5E9A245c9d4079547Fa16fA0A823114";
+  });
+
   it("should recognize the configured admin wallet address", async () => {
     const adminAddress = "0xa14504ffe5E9A245c9d4079547Fa16fA0A823114";
     

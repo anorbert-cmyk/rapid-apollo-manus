@@ -53,8 +53,8 @@ interface ApexCallbacks {
 /**
  * Check if Perplexity API is configured
  */
-export function isPerplexityConfigured(): boolean {
-  return !!process.env.PERPLEXITY_API_KEY;
+export function isApexEngineConfigured(): boolean {
+  return !!process.env.APEX_ENGINE_API_KEY;
 }
 
 /**
@@ -64,10 +64,10 @@ async function invokePerplexity(
   messages: PerplexityMessage[],
   maxTokens: number = 3000
 ): Promise<PerplexityResponse> {
-  const apiKey = process.env.PERPLEXITY_API_KEY;
-  
+  const apiKey = process.env.APEX_ENGINE_API_KEY;
+
   if (!apiKey) {
-    throw new Error("PERPLEXITY_API_KEY is not configured");
+    throw new Error("APEX_ENGINE_API_KEY is not configured");
   }
 
   const response = await fetch(PERPLEXITY_API_URL, {
@@ -108,7 +108,7 @@ export async function executeApexAnalysis(
   const parts: string[] = [];
   let totalTokens = 0;
   const allSearchResults: Array<{ title: string; url: string; date?: string }> = [];
-  
+
   // Maintain conversation history for multi-turn context
   const conversationHistory: PerplexityMessage[] = [];
 
@@ -120,7 +120,7 @@ export async function executeApexAnalysis(
 
     // Build messages with conversation history
     const systemPrompt = generateApexPartPrompt(userProblem, partNumber);
-    
+
     const messages: PerplexityMessage[] = [
       {
         role: "system",
@@ -129,7 +129,7 @@ export async function executeApexAnalysis(
       ...conversationHistory,
       {
         role: "user",
-        content: partNumber === 1 
+        content: partNumber === 1
           ? `Analyze this problem/idea and execute PART 1 of the UX strategy analysis:\n\n"${userProblem}"`
           : `Continue with PART ${partNumber} of the analysis. Build on the insights from previous parts.`,
       },
@@ -138,7 +138,7 @@ export async function executeApexAnalysis(
     try {
       // Determine max tokens based on part (Parts 2 & 3 need more)
       const maxTokens = partNumber === 1 || partNumber === 4 ? 2500 : 3000;
-      
+
       const response = await invokePerplexity(messages, maxTokens);
 
       const content = response.choices[0]?.message?.content || "";
@@ -193,7 +193,7 @@ export async function executeApexAnalysis(
     parts[3] || "",
     "\n---\n",
     "## Sources & References\n",
-    allSearchResults.length > 0 
+    allSearchResults.length > 0
       ? allSearchResults.map((sr, i) => `${i + 1}. [${sr.title}](${sr.url})${sr.date ? ` (${sr.date})` : ""}`).join("\n")
       : "No external sources cited.",
   ].join("\n");

@@ -47,10 +47,10 @@ interface InvokePerplexityOptions {
 export async function invokePerplexity(
   options: InvokePerplexityOptions
 ): Promise<PerplexityResponse> {
-  const apiKey = process.env.PERPLEXITY_API_KEY;
-  
+  const apiKey = process.env.APEX_ENGINE_API_KEY;
+
   if (!apiKey) {
-    throw new Error("PERPLEXITY_API_KEY is not configured");
+    throw new Error("APEX_ENGINE_API_KEY is not configured");
   }
 
   const response = await fetch(PERPLEXITY_API_URL, {
@@ -226,7 +226,7 @@ export async function executeApexAnalysis(
   const parts: string[] = [];
   let totalTokens = 0;
   const allSearchResults: Array<{ title: string; url: string }> = [];
-  
+
   // Maintain conversation history for multi-turn
   const conversationHistory: PerplexityMessage[] = [];
 
@@ -240,7 +240,7 @@ export async function executeApexAnalysis(
       ...conversationHistory,
       {
         role: "user",
-        content: partNumber === 1 
+        content: partNumber === 1
           ? `Analyze this problem/idea and execute PART 1: "${userProblem}"`
           : `Continue with PART ${partNumber} of the analysis.`,
       },
